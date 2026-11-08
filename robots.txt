@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /debate/contestant/_unknown/
+Disallow: /debate/_template/
+
+Sitemap: https://rhexlimited.com/sitemap.xml
