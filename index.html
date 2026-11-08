@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RHEX | Royal Home of Excellence Ltd.</title>
+  <meta name="description" content="Royal Home of Excellence (RHEX) inspires individual and corporate excellence through creativity and innovation: consultancy in leadership, business, education, writing and publishing, the RHEX Sabificate School, events, real estate and general merchandise. Abuja, Nigeria.">
+  <meta name="theme-color" content="#2F323E">
+  <meta property="og:title" content="RHEX | Royal Home of Excellence Ltd.">
+  <meta property="og:description" content="Inspiring individual and corporate excellence through creativity and innovation.">
+  <meta property="og:image" content="assets/img/hero-exhibition.jpg">
+  <meta property="og:url" content="https://www.rhexlimited.org">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <script>
+    /* Set theme before paint to avoid a flash */
+    (function () {
+      var d = document.documentElement, t = null;
+      d.classList.remove('no-js'); d.classList.add('js');
+      try { t = localStorage.getItem('rhex-theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      d.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <img src="assets/img/rhex-logo.png" alt="" width="120" height="125">
+      <span class="preloader__line"></span>
+      <span class="preloader__text">Inspiring Excellence</span>
+    </div>
+  </div>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Header -->
+  <header class="nav" id="top">
+    <div class="nav__inner container">
+      <a href="#home" class="brand" aria-label="RHEX home">
+        <img src="assets/img/rhex-logo.png" alt="RHEX logo" width="44" height="46">
+        <span class="brand__text">
+          <strong>RHEX</strong>
+          <small>Royal Home of Excellence</small>
+        </span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#vision">Vision</a>
+        <a href="#team">Team</a>
+        <a href="#services">Services</a>
+        <a href="#sabificate">Case Study</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch light / dark mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1.5 12h3M19.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z"/></svg>
+        </button>
+        <a href="#contact" class="btn btn--small btn--primary nav__cta">Get in touch</a>
+        <button class="nav__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a href="#about">About</a>
+      <a href="#vision">Vision &amp; Mission</a>
+      <a href="#team">Our Team</a>
+      <a href="#services">Services</a>
+      <a href="#sabificate">Case Study</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero__media" aria-hidden="true">
+        <img src="assets/img/hero-exhibition.jpg" alt="" class="hero__img">
+      </div>
+      <div class="hero__veil" aria-hidden="true"></div>
+      <canvas class="particles" data-particles="hero" aria-hidden="true"></canvas>
+      <div class="hero__shape hero__shape--a" aria-hidden="true"></div>
+      <div class="hero__shape hero__shape--b" aria-hidden="true"></div>
+
+      <div class="hero__content container">
+        <div class="hero__copy">
+          <p class="eyebrow hero__eyebrow"><span class="eyebrow__dash"></span>Royal Home of Excellence Ltd.</p>
+          <h1 class="hero__title">
+            <span class="line"><span>Inspiring <em>Excellence</em></span></span>
+            <span class="line"><span>through Creativity</span></span>
+            <span class="line"><span>&amp; Innovation.</span></span>
+          </h1>
+          <p class="hero__lead">Consultancy in leadership, business, education, writing and publishing, programmes that redefine lives, and a general merchandise conglomerate, all from Abuja, Nigeria.</p>
+          <div class="hero__ctas">
+            <a href="#services" class="btn btn--primary">Explore our programmes</a>
+            <a href="#contact" class="btn btn--ghost">Contact us</a>
+          </div>
+        </div>
+        <div class="hero__crest" aria-hidden="true">
+          <div class="crest">
+            <span class="crest__halo"></span>
+            <img src="assets/img/rhex-logo.png" alt="" width="300" height="312">
+          </div>
+        </div>
+      </div>
+
+      <a href="#about" class="hero__scroll" aria-label="Scroll to About">
+        <span>Scroll</span><i></i>
+      </a>
+    </section>
+
+    <!-- Mantra marquee -->
+    <section class="mantra" aria-label="Our mantra">
+      <div class="mantra__track">
+        <div class="mantra__group">
+          <span>Excellence</span><b>✦</b><span>Hope</span><b>✦</b><span>Leadership</span><b>✦</b><span>General Merchandise</span><b>✦</b><span>Aesthetics</span><b>✦</b>
+        </div>
+        <div class="mantra__group" aria-hidden="true">
+          <span>Excellence</span><b>✦</b><span>Hope</span><b>✦</b><span>Leadership</span><b>✦</b><span>General Merchandise</span><b>✦</b><span>Aesthetics</span><b>✦</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section about" id="about">
+      <div class="container about__grid">
+        <div class="about__media reveal">
+          <div class="frame frame--angled">
+            <img src="assets/img/certificate.jpg" alt="RHEX Certificate of Incorporation from the Corporate Affairs Commission" loading="lazy">
+          </div>
+          <div class="about__badge">
+            <strong>CAC</strong>
+            <span>Registered<br>2022</span>
+          </div>
+        </div>
+
+        <div class="about__copy">
+          <p class="eyebrow reveal"><span class="eyebrow__dash"></span>About us</p>
+          <h2 class="section-title reveal">Tying the knots of <em>excellence</em> in every realm.</h2>
+          <p class="reveal">Royal Home of Excellence (RHEX) was officially registered under the Corporate Affairs Commission (CAC) in 2022, making it a legal entity. Ever since, we have continued to thrive, tying the knots of excellence in different realms of private and corporate modus operandi.</p>
+          <p class="reveal">We have continued to excel in consultancy services, with emphasis on <strong>Leadership, Business, Education, Writing and Publishing</strong>. Secondly, as a conglomerate, we run a <strong>General Merchandise</strong>.</p>
+          <p class="reveal">As an institution, we drive our venture through different programmes that are potent in redefining lives.</p>
+
+          <div class="stats reveal">
+            <div class="stat"><span class="stat__num" data-count="2022">2022</span><span class="stat__label">Year registered</span></div>
+            <div class="stat"><span class="stat__num" data-count="9">9</span><span class="stat__label">Life-changing programmes</span></div>
+            <div class="stat"><span class="stat__num" data-count="15" data-suffix="+">15+</span><span class="stat__label">Years of Sabificate experience</span></div>
+            <div class="stat"><span class="stat__num" data-count="6">6</span><span class="stat__label">Core objectives</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision / Mission / Objectives -->
+    <section class="section vision" id="vision">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow reveal"><span class="eyebrow__dash"></span>What drives us</p>
+          <h2 class="section-title reveal">Our vision, mission <br>&amp; <em>objectives</em></h2>
+        </div>
+
+        <div class="vm-grid">
+          <article class="vm-card reveal">
+            <span class="vm-card__index">01</span>
+            <h3>Vision</h3>
+            <p>Our vision is to inspire individual and corporate excellence through creativity and innovations.</p>
+          </article>
+          <article class="vm-card reveal">
+            <span class="vm-card__index">02</span>
+            <h3>Mission</h3>
+            <p>We envision excellence through practical models and best operational tools.</p>
+          </article>
+          <article class="vm-card vm-card--dark reveal">
+            <span class="vm-card__index">03</span>
+            <h3>Our Mantra</h3>
+            <ul class="mantra-list">
+              <li>Excellence</li><li>Hope</li><li>Leadership</li><li>General Merchandise</li><li>Aesthetics</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="objectives reveal">
+          <div class="objectives__intro">
+            <h3>Our objectives</h3>
+            <p>Our objectives may be many, but the following are our core objectives.</p>
+          </div>
+          <ol class="objectives__list">
+            <li><span>01</span>To discover potentials and opportunities</li>
+            <li><span>02</span>To harness potentials and opportunities</li>
+            <li><span>03</span>To facilitate productivity</li>
+            <li><span>04</span>To inspire academic, leadership and corporate excellence</li>
+            <li><span>05</span>To beautify lives through interiors and real estate</li>
+            <li><span>06</span>To inspire hope and happiness through general merchandise</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- CEO message -->
+    <section class="ceo" id="ceo">
+      <canvas class="particles" data-particles="soft" aria-hidden="true"></canvas>
+      <div class="container ceo__grid">
+        <div class="ceo__portrait reveal">
+          <div class="frame frame--portrait">
+            <img src="assets/img/ceo.jpg" alt="Isaac Owoicho, CEO and Executive Director of RHEX" loading="lazy">
+          </div>
+          <span class="ceo__accent" aria-hidden="true"></span>
+        </div>
+        <div class="ceo__copy">
+          <p class="eyebrow eyebrow--light reveal"><span class="eyebrow__dash"></span>Message from the CEO</p>
+          <blockquote class="ceo__quote reveal">
+            <span class="ceo__mark" aria-hidden="true">“</span>
+            <p>Alongside the actions we are taking internally, we will also continue to amplify the voices and aspirations of the people we serve, and to draw on their experiences to help drive positive change.</p>
+          </blockquote>
+          <div class="ceo__sign reveal">
+            <strong>Isaac Owoicho</strong>
+            <span>CEO / Executive Director</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="section team" id="team">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow reveal"><span class="eyebrow__dash"></span>Board of directors</p>
+            <h2 class="section-title reveal">Meet the <em>team</em></h2>
+          </div>
+          <p class="section-lead reveal">Seasoned educators, managers and specialists steering RHEX towards excellence in every venture.</p>
+        </div>
+
+        <div class="leaders">
+          <article class="leader reveal">
+            <div class="leader__photo"><img src="assets/img/team/isaac-owoicho.jpg" alt="Isaac Owoicho" loading="lazy"></div>
+            <div class="leader__body">
+              <h3>Isaac Owoicho</h3>
+              <p class="role">CEO / Executive Director</p>
+              <p>Holds a B.A. in English and Literature from the prestigious University of Maiduguri. He is certified as a Trainer of Trainers by Teachers Without Borders, and certified in Theology.</p>
+              <p>He is a seasoned teacher who has taught in primary schools, secondary schools and tertiary institutions, a seasoned speaker and a management expert.</p>
+            </div>
+          </article>
+          <article class="leader reveal">
+            <div class="leader__photo"><img src="assets/img/team/blessing-owoicho.jpg" alt="Blessing Owoicho" loading="lazy"></div>
+            <div class="leader__body">
+              <h3>Blessing Owoicho</h3>
+              <p class="role">Executive Secretary</p>
+              <ul class="tags"><li>Chef</li><li>Event Manager</li><li>Business Administrator</li></ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="members">
+          <figure class="member reveal">
+            <div class="member__photo"><img src="assets/img/team/emmanuel-john-kadiya.jpg" alt="Emmanuel John Kadiya" loading="lazy"></div>
+            <figcaption><strong>Emmanuel John Kadiya</strong><span>Human Resource</span></figcaption>
+          </figure>
+          <figure class="member reveal">
+            <div class="member__photo"><img src="assets/img/team/zuwaira-gambo.jpg" alt="Amb. Hon. Zuwaira Gambo" loading="lazy"></div>
+            <figcaption><strong>Amb. Hon. Zuwaira Gambo</strong><span>Matron</span></figcaption>
+          </figure>
+          <figure class="member reveal">
+            <div class="member__photo"><img src="assets/img/team/benjamin-joseph-zaki.jpg" alt="Benjamin Joseph Zaki" loading="lazy"></div>
+            <figcaption><strong>Benjamin Joseph Zaki</strong><span>Financial Expert</span></figcaption>
+          </figure>
+          <figure class="member reveal">
+            <div class="member__photo"><img src="assets/img/team/alexander-adikwu-okpe.jpg" alt="Alexander Adikwu Okpe" loading="lazy"></div>
+            <figcaption><strong>Alexander Adikwu Okpe</strong><span>Cyber Security Expert</span></figcaption>
+          </figure>
+          <figure class="member reveal">
+            <div class="member__photo"><img src="assets/img/team/emmanuel-jadeoluwa.jpg" alt="Emmanuel JAdeOluwa" loading="lazy"></div>
+            <figcaption><strong>Emmanuel JAdeOluwa</strong><span>ICT Expert</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section services" id="services">
+      <div class="services__bg" aria-hidden="true"><img src="assets/img/group-bw.jpg" alt="" loading="lazy"></div>
+      <div class="container">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow reveal"><span class="eyebrow__dash"></span>Our services</p>
+            <h2 class="section-title reveal">Programmes potent in <em>redefining lives</em></h2>
+          </div>
+          <p class="section-lead reveal">From skills acquisition to events, emotional wellbeing to real estate, every RHEX programme exists to raise people and communities.</p>
+        </div>
+
+        <div class="service-grid">
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5L2 9Z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg></div>
+            <span class="service__num">01</span>
+            <h3>The RHEX Sabificate School</h3>
+            <p>Skills acquisition schemes aimed at equipping Nigerians, especially the youth population, with relevant skill competencies. Self-reliance programmes like the Sabificate School exist to ensure citizens' survival in Nigeria.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7L12 2Z"/></svg></div>
+            <span class="service__num">02</span>
+            <h3>The RHEX Talent Show</h3>
+            <p>Raises youngsters and helps disengage them from negative vices into becoming impact makers in their communities, with opportunities to interact with people from around the world through the performance arts.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v8H8l-5 4V5Z"/><path d="M14 9h7v8l-4-3h-5v-1"/></svg></div>
+            <span class="service__num">03</span>
+            <h3>The RHEX Debate</h3>
+            <p>Emphatic on the exchange of ideas, wit and sarcasm. Another way through which we intend to inspire leadership intentionally.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/><path d="M12 14v4M8 21h8M9 18h6"/></svg></div>
+            <span class="service__num">04</span>
+            <h3>The RHEX Awards</h3>
+            <p>Strategically crafted to amplify the achievements of men and women for the purpose of posterity, enabling the continuation of noble deeds.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-4.6-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.4-8 11-8 11Z"/><path d="M7.5 12h2.5l1.5-2.5 2 4.5 1.5-2H17"/></svg></div>
+            <span class="service__num">05</span>
+            <h3>RHEX Emotional Clinic</h3>
+            <p>A stand-alone service for private fee-paying patients, run with excellence in autism, intellectual disability, mental health, relationships, professional training and life coaching.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17h18"/><path d="M5 17a7 7 0 0 1 14 0"/><path d="M12 8V6M10 6h4M4 20h16"/></svg></div>
+            <span class="service__num">06</span>
+            <h3>RHEX Catering / Event Management</h3>
+            <p>Thriving into becoming the leading Nigerian event management entity, offering unashamedly high-quality event management and catering services.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></div>
+            <span class="service__num">07</span>
+            <h3>RHEX Real Estate Management</h3>
+            <p>A proven track record of creating exceptional client experiences in real estate, and in interior and exterior decor services.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M9 7h7M9 10.5h5"/></svg></div>
+            <span class="service__num">08</span>
+            <h3>Book Publishing &amp; Editing</h3>
+            <p>Part of our consultancy in writing and publishing: we help authors take their manuscripts from draft to a polished, published book.</p>
+          </article>
+          <article class="service reveal">
+            <div class="service__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M17 11l2 2 3.5-4"/></svg></div>
+            <span class="service__num">09</span>
+            <h3>Special Training Classes / Organisational Recruitment</h3>
+            <p>Bespoke training classes and recruitment support for organisations, built on our consultancy in leadership, business and education.</p>
+          </article>
+        </div>
+
+        <div class="consult reveal">
+          <h3>Consultancy services</h3>
+          <ul>
+            <li>Leadership</li><li>Business</li><li>Education</li><li>Writing &amp; Publishing</li><li>General Merchandise</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Case study -->
+    <section class="section case" id="sabificate">
+      <div class="container">
+        <div class="case__head">
+          <div>
+            <p class="eyebrow reveal"><span class="eyebrow__dash"></span>Case study</p>
+            <h2 class="section-title reveal">The RHEX <em>Sabificate</em> School</h2>
+          </div>
+          <p class="section-lead reveal">A case study of successful RHEX certification through internal engagement. It unveils valuable lessons on successful stakeholder engagement and teamwork on the company's way to becoming a certified Sabificate corporation.</p>
+        </div>
+
+        <div class="case__grid">
+          <div class="case__media reveal">
+            <div class="frame frame--angled frame--tint">
+              <img src="assets/img/staff-training-bw.jpg" alt="RHEX Sabificate participants and facilitators" loading="lazy">
+            </div>
+          </div>
+
+          <article class="case__block reveal">
+            <span class="case__step">01</span>
+            <h3>The challenge</h3>
+            <p>The problem the Sabificate programme addresses is technical manpower development in Nigeria. Skill acquisition in Sabificate education is imperative as it provides equal opportunities for youths and adults to become employable and maintain their employable status, regardless of the economic and social change that inevitably affects them.</p>
+            <p>Some of the skills acquired through Sabificate are communication, technical and managerial skills, and these skills further empower participants economically, politically and educationally.</p>
+          </article>
+
+          <article class="case__block case__block--solution reveal">
+            <span class="case__step">02</span>
+            <h3>The solution</h3>
+            <ol class="solution-list">
+              <li>Investing in skills acquisition programmes to address unemployment.</li>
+              <li>Strengthening the transition from training to work through provision of starter packs to skilled unemployed Nigerians to avoid relapse.</li>
+              <li>Creation of a broadened platform for self-employment opportunities, enhanced value re-orientation and provision of adequate social skills training.</li>
+              <li>Promoting youth employability skills.</li>
+              <li>Enhancement of social and financial inclusion among unemployed youths, women and other vulnerable groups.</li>
+              <li>De-radicalisation and re-integration of social deviants.</li>
+              <li>Establishment of a National Employment Trust Fund.</li>
+            </ol>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why choose us -->
+    <section class="why" id="why">
+      <canvas class="particles" data-particles="soft" aria-hidden="true"></canvas>
+      <div class="container why__grid">
+        <div class="why__copy">
+          <p class="eyebrow eyebrow--light reveal"><span class="eyebrow__dash"></span>Why choose us?</p>
+          <h2 class="section-title section-title--light reveal">The best tools to help you <em>improve your life.</em></h2>
+          <p class="why__quote reveal">“We have helped scores of people improve their front lines across a variety of fields, from adolescence to the teens and adult life. With more than 15 years of experience in Sabificate, we have the best tools in training to help you improve your life.”</p>
+        </div>
+        <ul class="why__list">
+          <li class="reveal"><i aria-hidden="true"></i>Because your passion is our passion.</li>
+          <li class="reveal"><i aria-hidden="true"></i>Because we've been there and done it.</li>
+          <li class="reveal"><i aria-hidden="true"></i>Because we're chosen by professionals.</li>
+          <li class="reveal"><i aria-hidden="true"></i>Because we don't cost the earth.</li>
+          <li class="reveal"><i aria-hidden="true"></i>Because we'll understand your goal.</li>
+          <li class="reveal"><i aria-hidden="true"></i>Because we're easy to work with.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="section projects" id="projects">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow reveal"><span class="eyebrow__dash"></span>Recent projects</p>
+            <h2 class="section-title reveal">Moments of <em>excellence</em>, 2024</h2>
+          </div>
+          <div class="filters reveal" role="group" aria-label="Filter projects">
+            <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="filter" data-filter="karu" aria-pressed="false">Karu Summer Sabificate</button>
+            <button type="button" class="filter" data-filter="summer" aria-pressed="false">RHEX Summer Sabificate</button>
+            <button type="button" class="filter" data-filter="exhibition" aria-pressed="false">Grand Finale Exhibition</button>
+            <button type="button" class="filter" data-filter="staff" aria-pressed="false">Staff Training</button>
+          </div>
+        </div>
+
+        <div class="gallery">
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g04.jpg" alt="A young participant at Karu Summer Sabificate 2024" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g03.jpg" alt="Head-wrap styling class at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="staff"><img src="assets/img/gallery/g07.jpg" alt="RHEX staff training group photo" loading="lazy"><figcaption>Staff Training 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g01.jpg" alt="Guitar lessons at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="summer"><img src="assets/img/gallery/g12.jpg" alt="RHEX Summer Sabificate facilitators" loading="lazy"><figcaption>RHEX Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g06.jpg" alt="Photography class at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g14.jpg" alt="Presentation at the RHEX Sabificate Grand Finale Exhibition" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+          <figure class="shot" data-cat="summer"><img src="assets/img/gallery/g09.jpg" alt="A student writing during RHEX Summer Sabificate" loading="lazy"><figcaption>RHEX Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="summer"><img src="assets/img/gallery/g10.jpg" alt="Children celebrating at RHEX Summer Sabificate" loading="lazy"><figcaption>RHEX Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g18.jpg" alt="Products made by Sabificate participants on display" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g23.jpg" alt="Cooking class at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="summer"><img src="assets/img/gallery/g08.jpg" alt="Guest at RHEX Summer Sabificate" loading="lazy"><figcaption>RHEX Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g15.jpg" alt="Guests at the Sabificate Grand Finale Exhibition" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+          <figure class="shot" data-cat="summer"><img src="assets/img/gallery/g11.jpg" alt="Outdoor photography session at RHEX Summer Sabificate" loading="lazy"><figcaption>RHEX Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g25.jpg" alt="Participants cooking at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g20.jpg" alt="Liquid soap and detergents made by participants" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+          <figure class="shot" data-cat="summer"><img src="assets/img/gallery/g13.jpg" alt="RHEX Summer Sabificate 2024 group photo" loading="lazy"><figcaption>RHEX Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g21.jpg" alt="Facilitator teaching at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g19.jpg" alt="Creams and cosmetics made by participants" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g24.jpg" alt="Participants at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g16.jpg" alt="Visitors at the Sabificate Grand Finale Exhibition" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g02.jpg" alt="A boy learning guitar at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="karu"><img src="assets/img/gallery/g22.jpg" alt="Bead-making at Karu Summer Sabificate" loading="lazy"><figcaption>Karu Summer Sabificate 2024</figcaption></figure>
+          <figure class="shot" data-cat="exhibition"><img src="assets/img/gallery/g17.jpg" alt="Craft products at the Grand Finale Exhibition" loading="lazy"><figcaption>Grand Finale Exhibition 2024</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <canvas class="particles" data-particles="hero" aria-hidden="true"></canvas>
+      <div class="container contact__grid">
+        <div class="contact__copy">
+          <p class="eyebrow eyebrow--light reveal"><span class="eyebrow__dash"></span>Contact us</p>
+          <h2 class="section-title section-title--light reveal">Let's build something <em>excellent</em> together.</h2>
+
+          <ul class="contact__list">
+            <li class="reveal">
+              <span class="contact__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2Z"/></svg></span>
+              <div><small>Telephone</small><a href="tel:+2348107011517">+234 810 701 1517</a><a href="tel:+2349097404887">+234 909 740 4887</a></div>
+            </li>
+            <li class="reveal">
+              <span class="contact__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
+              <div><small>Physical address</small><address>Flat 2, No. 28 Kampala Street,<br>Wuse II, Abuja.</address></div>
+            </li>
+            <li class="reveal">
+              <span class="contact__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+              <div><small>Postal address</small><address>P.M.B 534, Abuja, FCT</address></div>
+            </li>
+            <li class="reveal">
+              <span class="contact__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+              <div><small>Website</small><a href="https://www.rhexlimited.org">www.rhexlimited.org</a></div>
+            </li>
+          </ul>
+
+          <div class="socials reveal">
+            <a href="https://www.facebook.com/RHEXlimited" target="_blank" rel="noopener" aria-label="RHEX on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8Z"/></svg></a>
+            <a href="https://www.instagram.com/RHEXlimited" target="_blank" rel="noopener" aria-label="RHEX on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg></a>
+            <a href="https://x.com/RHEXlimited" target="_blank" rel="noopener" aria-label="RHEX on X (Twitter)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20"/></svg></a>
+            <a href="https://wa.me/2349097404887" target="_blank" rel="noopener" aria-label="Chat with RHEX on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8.5 8.5 0 1 1 8 18.8L4 20Z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 1a4.5 4.5 0 0 1-3-3l1-1-1-2L9 8.5Z"/></svg></a>
+            <span class="socials__handle">@RHEXlimited</span>
+          </div>
+        </div>
+
+        <form class="contact__form reveal" id="contact-form" novalidate>
+          <h3>Send us a message</h3>
+          <p class="form__hint">Your message opens in WhatsApp, ready to send to our team.</p>
+          <div class="field">
+            <input type="text" id="f-name" name="name" required autocomplete="name" placeholder=" ">
+            <label for="f-name">Full name</label>
+          </div>
+          <div class="field">
+            <input type="tel" id="f-phone" name="phone" autocomplete="tel" placeholder=" ">
+            <label for="f-phone">Phone (optional)</label>
+          </div>
+          <div class="field">
+            <select id="f-topic" name="topic">
+              <option>General enquiry</option>
+              <option>The RHEX Sabificate School</option>
+              <option>The RHEX Talent Show</option>
+              <option>The RHEX Debate</option>
+              <option>The RHEX Awards</option>
+              <option>RHEX Emotional Clinic</option>
+              <option>RHEX Catering / Event Management</option>
+              <option>RHEX Real Estate Management</option>
+              <option>Book Publishing &amp; Editing</option>
+              <option>Special Training / Recruitment</option>
+              <option>Consultancy</option>
+              <option>General Merchandise</option>
+            </select>
+            <label for="f-topic" class="is-static">I'm interested in</label>
+          </div>
+          <div class="field">
+            <textarea id="f-message" name="message" rows="4" required placeholder=" "></textarea>
+            <label for="f-message">Your message</label>
+          </div>
+          <p class="form__error" role="alert" hidden>Please add your name and a message.</p>
+          <button type="submit" class="btn btn--primary btn--block">Send via WhatsApp</button>
+        </form>
+      </div>
+
+      <div class="container map reveal">
+        <iframe title="Map showing 28 Kampala Street, Wuse II, Abuja" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=28%20Kampala%20Street%2C%20Wuse%20II%2C%20Abuja&amp;z=15&amp;output=embed"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <img src="assets/img/rhex-logo.png" alt="RHEX logo" width="64" height="66" loading="lazy">
+        <div>
+          <strong>Royal Home of Excellence Ltd.</strong>
+          <em>...Inspiring Excellence</em>
+        </div>
+      </div>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="#about">About</a><a href="#services">Services</a><a href="#team">Team</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> Royal Home of Excellence Ltd. Registered with the Corporate Affairs Commission, Nigeria.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox__close" type="button" aria-label="Close">×</button>
+    <button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Previous image">‹</button>
+    <figure><img alt=""><figcaption></figcaption></figure>
+    <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Next image">›</button>
+  </div>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
