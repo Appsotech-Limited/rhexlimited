@@ -95,7 +95,7 @@
   <script src="data/contestants.js"></script>
   <script src="assets/debate.js"></script>
   <script>
-    (function () {
+    window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {};
       var $ = function (s) { return document.getElementById(s); };
       var price = Number(cfg.votePrice) || 100;
@@ -195,7 +195,7 @@
       function closeThanks() { $("thanks").classList.remove("show"); document.body.classList.remove("celebrating"); }
       $("thanks-close").addEventListener("click", closeThanks);
       document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeThanks(); });
-    })();
+    });
   </script>
 </body>
 </html>

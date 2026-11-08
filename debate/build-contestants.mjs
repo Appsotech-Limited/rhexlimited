@@ -80,10 +80,24 @@ for (const c of contestants) {
   fs.writeFileSync(path.join(voteRoot, num, "index.html"), voteHtml);
 }
 
+// /v/<number> for a contestant without a built page yet (e.g. just added in
+// /admin/): NUMBER_JSON null makes the page read the number from the address.
+const voteAny = voteTemplate
+  .replaceAll("{{TITLE}}", "Vote · The President · RHEX Reality Debate Show")
+  .replaceAll("{{DESCRIPTION}}", "Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.")
+  .replaceAll("{{URL}}", `${SITE}/debate/`)
+  .replaceAll("{{IMAGE}}", `${SITE}/assets/img/rhex-logo.png`)
+  .replaceAll("{{IMAGE_ALT}}", "RHEX crest")
+  .replaceAll("{{NAME}}", "")
+  .replaceAll("{{ROBOTS}}", "noindex, follow")
+  .replaceAll("{{NUMBER_JSON}}", "null");
+fs.mkdirSync(path.join(voteRoot, "_any"), { recursive: true });
+fs.writeFileSync(path.join(voteRoot, "_any", "index.html"), voteAny);
+
 // Remove quick-vote pages for contestants no longer in the list.
 if (fs.existsSync(voteRoot)) {
   for (const dir of fs.readdirSync(voteRoot)) {
-    if (!seen.has(dir)) fs.rmSync(path.join(voteRoot, dir), { recursive: true, force: true });
+    if (!seen.has(dir) && dir !== "_any") fs.rmSync(path.join(voteRoot, dir), { recursive: true, force: true });
   }
 }
 
@@ -119,7 +133,8 @@ const hashes = Object.fromEntries(stamped.map((f) => [f,
   crypto.createHash("sha1").update(fs.readFileSync(path.join(here, f))).digest("hex").slice(0, 10)]));
 const pages = [path.join(here, "index.html"), path.join(outRoot, "index.html"),
   ...[...seen].map((d) => path.join(outRoot, d, "index.html")),
-  ...[...seen].map((d) => path.join(voteRoot, d, "index.html"))];
+  ...[...seen].map((d) => path.join(voteRoot, d, "index.html")),
+  path.join(voteRoot, "_any", "index.html")];
 for (const page of pages) {
   if (!fs.existsSync(page)) continue;
   let html = fs.readFileSync(page, "utf8");
