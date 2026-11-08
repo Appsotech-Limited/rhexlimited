@@ -1,6 +1,6 @@
 # RHEX: Royal Home of Excellence Ltd.
 
-Corporate website for Royal Home of Excellence (RHEX), Abuja, Nigeria. www.rhexlimited.org
+Corporate website for Royal Home of Excellence (RHEX), Abuja, Nigeria. www.rhexlimited.com
 
 Plain static HTML, CSS and JavaScript. There is no build step and nothing to install.
 

@@ -1,0 +1,14 @@
+# Netlify settings for rhexlimited.com (static site + debate show vote counting).
+[build]
+  publish = "."
+  # Builds the per-contestant pages at /debate/contestant/<number>.
+  command = "node debate/build-contestants.mjs"
+
+[functions]
+  directory = "netlify/functions"
+
+# Unknown contestant numbers get a friendly "contestant not found" page.
+[[redirects]]
+  from = "/debate/contestant/*"
+  to = "/debate/contestant/_unknown/index.html"
+  status = 404
