@@ -42,6 +42,33 @@ const outRoot = path.join(here, "contestant");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const price = Number(config.votePrice) || 100;
 
+// Link previews (WhatsApp in particular) show a thumbnail more reliably when the
+// image's type and size are declared up front, so read them from the file.
+function imageSize(file) {
+  try {
+    const b = fs.readFileSync(file);
+    if (b[0] === 0x89 && b[1] === 0x50) return { type: "image/png", w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+    for (let i = 2; i < b.length - 9;) {
+      if (b[i] !== 0xff) break;
+      const m = b[i + 1], len = b.readUInt16BE(i + 2);
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc)
+        return { type: "image/jpeg", h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7) };
+      i += 2 + len;
+    }
+  } catch {}
+  return null;
+}
+const root = path.join(here, "..");
+function imageMeta(url) {
+  const local = url.startsWith(SITE + "/") ? path.join(root, decodeURI(url.slice(SITE.length + 1))) : null;
+  const size = local && imageSize(local);
+  let out = `  <meta property="og:image:secure_url" content="${esc(url)}">\n`;
+  if (size) out += `  <meta property="og:image:type" content="${size.type}">\n` +
+    `  <meta property="og:image:width" content="${size.w}">\n  <meta property="og:image:height" content="${size.h}">\n`;
+  return out;
+}
+const logoMeta = imageMeta(`${SITE}/assets/img/rhex-logo.png`);
+
 const seen = new Set();
 for (const c of contestants) {
   const num = String(c.number || "").trim();
@@ -58,6 +85,7 @@ for (const c of contestants) {
     .replaceAll("{{TITLE}}", esc(`Vote ${c.name} · Contestant ${num} · The President`))
     .replaceAll("{{DESCRIPTION}}", esc(`Vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). Each vote is ₦${price.toLocaleString("en-NG")}.`))
     .replaceAll("{{URL}}", esc(url))
+    .replaceAll("{{IMAGE_META}}", imageMeta(image))
     .replaceAll("{{IMAGE}}", esc(image))
     .replaceAll("{{IMAGE_ALT}}", esc(`${c.name}, Contestant ${num}`))
     .replaceAll("{{NAME}}", esc(c.name))
@@ -71,6 +99,8 @@ for (const c of contestants) {
     .replaceAll("{{TITLE}}", esc(`Vote for ${c.name} · Contestant ${num} · The President`))
     .replaceAll("{{DESCRIPTION}}", esc(`Tap to vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). ₦${price.toLocaleString("en-NG")} per vote.`))
     .replaceAll("{{URL}}", esc(url))
+    .replaceAll("{{SHARE_URL}}", esc(`${SITE}/v/${num}`))
+    .replaceAll("{{IMAGE_META}}", imageMeta(image))
     .replaceAll("{{IMAGE}}", esc(image))
     .replaceAll("{{IMAGE_ALT}}", esc(`${c.name}, Contestant ${num}`))
     .replaceAll("{{NAME}}", esc(c.name))
@@ -86,6 +116,8 @@ const voteAny = voteTemplate
   .replaceAll("{{TITLE}}", "Vote · The President · RHEX Reality Debate Show")
   .replaceAll("{{DESCRIPTION}}", "Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.")
   .replaceAll("{{URL}}", `${SITE}/debate/`)
+  .replaceAll("{{SHARE_URL}}", `${SITE}/debate/`)
+  .replaceAll("{{IMAGE_META}}", logoMeta)
   .replaceAll("{{IMAGE}}", `${SITE}/assets/img/rhex-logo.png`)
   .replaceAll("{{IMAGE_ALT}}", "RHEX crest")
   .replaceAll("{{NAME}}", "")
@@ -106,6 +138,7 @@ const generic = template
   .replaceAll("{{TITLE}}", "Contestant not found · The President")
   .replaceAll("{{DESCRIPTION}}", "Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.")
   .replaceAll("{{URL}}", `${SITE}/debate/`)
+  .replaceAll("{{IMAGE_META}}", logoMeta)
   .replaceAll("{{IMAGE}}", `${SITE}/assets/img/rhex-logo.png`)
   .replaceAll("{{IMAGE_ALT}}", "RHEX crest")
   .replaceAll("{{NAME}}", "")
