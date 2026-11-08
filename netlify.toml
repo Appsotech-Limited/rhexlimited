@@ -1,4 +1,4 @@
-# Netlify settings for rhexlimited.org (static site + debate show vote counting).
+# Netlify settings for rhexlimited.com (static site + debate show vote counting).
 [build]
   publish = "."
   # Builds the per-contestant pages at /debate/contestant/<number>.

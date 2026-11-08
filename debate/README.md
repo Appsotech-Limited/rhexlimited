@@ -32,11 +32,11 @@ Everything below is free-tier. Allow about 20 minutes.
    | `SUPABASE_SERVICE_ROLE_KEY` | the service_role key from step 1 |
    | `VOTE_PRICE_NAIRA` | `100` (must match `votePrice` in `data/contestants.js`) |
    | `DEBATE_TALLY_HIDDEN` | optional. Set it to `true` to hide vote counts, for example during the final days. |
-3. Point **rhexlimited.org** at the site under **Domain management**, then redeploy.
+3. Point **rhexlimited.com** at the site under **Domain management**, then redeploy.
 
 ### 3. Paystack
 1. Put your **public** key (`pk_live_…`) in `paystackPublicKey` in `data/contestants.js`. Never put the secret key in website files.
-2. In **Paystack Dashboard → Settings → API Keys & Webhooks**, set the **Live Webhook URL** to `https://www.rhexlimited.org/api/debate/paystack-webhook`.
+2. In **Paystack Dashboard → Settings → API Keys & Webhooks**, set the **Live Webhook URL** to `https://www.rhexlimited.com/api/debate/paystack-webhook`.
 
 ## How a vote is counted
 
