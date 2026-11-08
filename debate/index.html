@@ -151,10 +151,10 @@
     </div>
   </footer>
 
-  <script src="data/contestants.js?v=c66bb3f426"></script>
-  <script src="assets/debate.js?v=98119003c7"></script>
+  <script src="data/contestants.js?v=aa0b9a5918"></script>
+  <script src="assets/debate.js?v=e8f8ace5f0"></script>
   <script>
-    (function () {
+    window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {}, list = (R.data.contestants || []).slice();
       document.querySelectorAll("[data-price]").forEach(function (el) { el.textContent = R.naira(cfg.votePrice || 100); });
       list.sort(function (a, b) { return Number(a.number) - Number(b.number); });
@@ -192,7 +192,7 @@
           board.querySelectorAll("[data-count]").forEach(function (n) { R.countUp(n, n.dataset.count); });
         });
       });
-    })();
+    });
   </script>
 </body>
 </html>

@@ -15,7 +15,25 @@ const SITE = (process.env.SITE_URL || process.env.URL || "https://rhexlimited.co
 
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(here, "data/contestants.js"), "utf8"), sandbox);
-const { config = {}, contestants = [] } = sandbox.window.RHEX_DEBATE || {};
+const { config = {}, contestants: fallback = [] } = sandbox.window.RHEX_DEBATE || {};
+
+// Contestants live in Supabase (managed at /admin/). The list in data/contestants.js
+// is only used when the database can't be reached (e.g. a local preview).
+async function liveContestants() {
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return null;
+  try {
+    const { db, toPublic, byNumber } = await import("../netlify/lib/debate-db.mjs");
+    const { data } = await db("debate_contestants?select=number,name,photo,poster,message&active=eq.true");
+    return data.map(toPublic).sort(byNumber);
+  } catch (err) {
+    console.warn("Couldn't load contestants from Supabase, using data/contestants.js:", err.message);
+    return null;
+  }
+}
+const live = await liveContestants();
+const contestants = live || fallback;
+console.log(live ? "Contestants loaded from Supabase" : "Contestants loaded from data/contestants.js");
 
 const template = fs.readFileSync(path.join(here, "_template/contestant.html"), "utf8");
 const outRoot = path.join(here, "contestant");
@@ -31,7 +49,9 @@ for (const c of contestants) {
 
   const url = `${SITE}/debate/contestant/${num}`;
   const pic = c.poster || c.photo;
-  const image = pic ? `${SITE}/debate/${pic.replace(/^\/?(debate\/)?/, "")}` : `${SITE}/assets/img/rhex-logo.png`;
+  const image = !pic ? `${SITE}/assets/img/rhex-logo.png`
+    : /^https?:\/\//.test(pic) ? pic
+    : `${SITE}/debate/${pic.replace(/^\/?(debate\/)?/, "")}`;
   const html = template
     .replaceAll("{{TITLE}}", esc(`Vote ${c.name} · Contestant ${num} · The President`))
     .replaceAll("{{DESCRIPTION}}", esc(`Vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). Each vote is ₦${price.toLocaleString("en-NG")}.`))
@@ -48,7 +68,9 @@ const generic = template
   .replaceAll("{{DESCRIPTION}}", "Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.")
   .replaceAll("{{URL}}", `${SITE}/debate/`)
   .replaceAll("{{IMAGE}}", `${SITE}/assets/img/rhex-logo.png`)
-  .replaceAll("{{NUMBER_JSON}}", '"__none__"');
+    // null: the page reads the number from the address, so a contestant added in
+  // /admin/ works straight away, before the next deploy builds their own page.
+  .replaceAll("{{NUMBER_JSON}}", "null");
 fs.mkdirSync(path.join(outRoot, "_unknown"), { recursive: true });
 fs.writeFileSync(path.join(outRoot, "_unknown", "index.html"), generic);
 seen.add("_unknown");

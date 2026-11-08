@@ -15,7 +15,7 @@
   <meta property="og:description" content="Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.">
   <meta property="og:image" content="https://rhexlimited.com/assets/img/rhex-logo.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script>window.RHEX_CONTESTANT = "__none__";</script>
+  <script>window.RHEX_CONTESTANT = null;</script>
   <meta name="theme-color" content="#15161C">
   <link rel="icon" href="../assets/img/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
@@ -149,10 +149,10 @@
   </footer>
 
   <script src="https://js.paystack.co/v2/inline.js" defer></script>
-  <script src="data/contestants.js?v=c66bb3f426"></script>
-  <script src="assets/debate.js?v=98119003c7"></script>
+  <script src="data/contestants.js?v=aa0b9a5918"></script>
+  <script src="assets/debate.js?v=e8f8ace5f0"></script>
   <script>
-    (function () {
+    window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {};
       var price = Number(cfg.votePrice) || 100;
       var maxVotes = Number(cfg.maxVotesPerPayment) || 10000;
@@ -303,7 +303,7 @@
       $("thanks-close").addEventListener("click", closeThanks);
       $("thanks").addEventListener("click", function (e) { if (e.target === $("thanks")) closeThanks(); });
       document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeThanks(); });
-    })();
+    });
   </script>
 </body>
 </html>
