@@ -78,10 +78,10 @@
     </div>
   </footer>
 
-  <script src="data/contestants.js?v=c66bb3f426"></script>
-  <script src="assets/debate.js?v=98119003c7"></script>
+  <script src="data/contestants.js?v=aa0b9a5918"></script>
+  <script src="assets/debate.js?v=e8f8ace5f0"></script>
   <script>
-    (function () {
+    window.RHEX.ready(function () {
       var R = window.RHEX, list = (R.data.contestants || []).slice();
       list.sort(function (a, b) { return Number(a.number) - Number(b.number); });
       var input = document.getElementById("code"), grid = document.getElementById("grid");
@@ -115,7 +115,7 @@
       if (q) input.value = q;
       render();
       R.watchTally(function (t) { totals = t; render(); });
-    })();
+    });
   </script>
 </body>
 </html>

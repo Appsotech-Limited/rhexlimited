@@ -12,3 +12,12 @@
   from = "/debate/contestant/*"
   to = "/debate/contestant/_unknown/index.html"
   status = 404
+
+# Admin dashboard: never indexed, never cached.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "same-origin"

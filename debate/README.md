@@ -9,9 +9,21 @@ Static pages, no build step. They share the main site's logo (`../assets/img/rhe
 | A contestant's shareable voting page | `/debate/contestant/<number>` (e.g. `/debate/contestant/1120`) |
 | Live vote totals (JSON) | `/api/debate/tally` |
 
-## Adding a contestant
+## Managing contestants (admin dashboard)
 
-Edit `data/contestants.js` and copy one block in `contestants`. On the next deploy Netlify runs `node debate/build-contestants.mjs`, which writes `debate/contestant/<number>/index.html` for every contestant (with their own WhatsApp/Facebook link preview). Run it yourself to preview locally. Edit the page design in `_template/contestant.html`, never the generated copies. Put photos in `debate/assets/contestants/` and set `photo` to e.g. `"assets/contestants/1120.jpg"` (portrait, 4:5 works best). Without a photo, a gold monogram is shown.
+Go to **https://rhexlimited.com/admin/** and sign in with the admin password. There you can:
+
+- add, edit, hide or delete contestants, and upload their photo and poster from your phone (pictures are shrunk automatically),
+- see live vote totals, money received and the ranking,
+- browse and search every confirmed payment, and download them as a CSV for Excel.
+
+Contestants are stored in Supabase (`debate_contestants`), and photos in the public Storage bucket `debate-contestants`. The voting pages load the list live from `/api/debate/contestants`, so a change shows on the site within about 15 seconds. **Hide** takes a contestant off the site but keeps everything; **Delete** removes them from the list (their payment records stay).
+
+The list in `data/contestants.js` is now only a fallback for when the live list can't be loaded. Settings such as the vote price and Paystack public key are still in that file.
+
+Each contestant's own page (`/debate/contestant/<number>`, with its WhatsApp/Facebook preview) is written at deploy time by `build-contestants.mjs`, which reads the list from Supabase. A contestant added in the dashboard can be voted for straight away; their link preview shows their name and photo after the next deploy. To make that automatic, create a build hook in Netlify (**Site configuration → Build & deploy → Build hooks**) and save its URL as `DEBATE_BUILD_HOOK_URL`.
+
+Admin setup: run `supabase/debate_admin.sql` once in Supabase, then add `ADMIN_PASSWORD` (10+ characters) in Netlify's environment variables and redeploy. Eight wrong passwords from one connection lock it out for 15 minutes. Sessions last 12 hours; changing the password signs everyone out.
 
 ## Going live: one-time setup
 

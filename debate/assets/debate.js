@@ -23,6 +23,25 @@
 
   /* ---------- Helpers ---------- */
   RHEX.data = window.RHEX_DEBATE || { config: {}, contestants: [] };
+  // Contestants are managed in the admin dashboard (/admin/) and served live by
+  // /api/debate/contestants. The list in data/contestants.js is only a fallback
+  // for when that can't be reached. Calls cb() once the list is ready.
+  var readyQueue = null;
+  RHEX.ready = function (cb) {
+    if (readyQueue === true) return cb();
+    if (readyQueue) return readyQueue.push(cb);
+    readyQueue = [cb];
+    var url = (RHEX.data.config || {}).contestantsEndpoint;
+    function done() { var q = readyQueue; readyQueue = true; q.forEach(function (f) { f(); }); }
+    if (!url || location.protocol === "file:" || !window.fetch) return done();
+    var finished = false;
+    var timer = setTimeout(function () { if (!finished) { finished = true; done(); } }, 5000);
+    fetch(url, { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { if (j && Array.isArray(j.contestants) && !finished) RHEX.data.contestants = j.contestants; })
+      .catch(function () {})
+      .then(function () { if (!finished) { finished = true; clearTimeout(timer); done(); } });
+  };
   RHEX.naira = function (n) {
     return "₦" + Number(n).toLocaleString("en-NG", { maximumFractionDigits: 0 });
   };

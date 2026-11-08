@@ -1,8 +1,9 @@
 /*
  * RHEX Reality Debate Show (The President): settings and contestant list.
  *
- * To add a contestant, copy one block inside `contestants` and change it.
- *   number : the contestant's number. Their share link is contestant.html?c=<number>
+ * Contestants are now managed in the admin dashboard at /admin/ (stored in Supabase).
+ * The list below is only a FALLBACK, used if the live list can't be loaded.
+ *   number : the contestant's number. Their share link is /debate/contestant/<number>
  *   name   : full name as it should appear on the page
  *   photo  : optional, path to a portrait, 4:5 (e.g. "assets/contestants/1120.jpg").
  *            Leave "" to show a gold monogram instead.
@@ -27,6 +28,9 @@ window.RHEX_DEBATE = {
     // Leave as is; set to "" to switch the counts off on the pages entirely.
     tallyEndpoint: "/api/debate/tally",
     tallyRefreshSeconds: 30,
+
+    // Live contestant list (edited at /admin/). Leave as is.
+    contestantsEndpoint: "/api/debate/contestants",
 
     // Appeal shown on a contestant's page when they don't have their own `message`.
     defaultMessage: [

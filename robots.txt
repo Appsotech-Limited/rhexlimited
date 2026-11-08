@@ -2,5 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /debate/contestant/_unknown/
 Disallow: /debate/_template/
+Disallow: /admin/
+Disallow: /api/
 
 Sitemap: https://rhexlimited.com/sitemap.xml
