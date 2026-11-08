@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | RHEX</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#2F323E">
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem('rhex-theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .nf { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; text-align: center; padding: 48px 16px; position: relative; overflow: hidden; isolation: isolate; background: var(--night); color: #fff; }
+    .nf::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(700px 480px at 50% 30%, rgba(249, 160, 27, .18), transparent 65%); }
+    .nf::after { content: ""; position: absolute; right: -90px; bottom: -60px; width: 260px; height: 240px; z-index: -1; background: var(--orange); clip-path: polygon(35% 0, 100% 0, 65% 100%, 0 100%); opacity: .9; }
+    .nf__inner { max-width: 560px; display: grid; justify-items: center; gap: 8px; }
+    .nf img { width: 110px; height: auto; margin-bottom: 18px; filter: drop-shadow(0 0 30px rgba(212, 175, 55, .35)); }
+    .nf__code { font-family: var(--font-display); font-size: clamp(88px, 18vw, 150px); line-height: .9; color: var(--orange); }
+    .nf h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(30px, 5vw, 44px); margin-bottom: 6px; }
+    .nf p { color: rgba(255, 255, 255, .72); margin-bottom: 24px; }
+    .nf__ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .nf__tag { margin-top: 36px; font-family: var(--font-display); font-style: italic; color: var(--gold-soft); }
+  </style>
+</head>
+<body>
+  <main class="nf">
+    <div class="nf__inner">
+      <a href="/" aria-label="RHEX home"><img src="/assets/img/rhex-logo.png" alt="RHEX logo" width="110" height="114"></a>
+      <span class="nf__code">404</span>
+      <h1>This page could not be found.</h1>
+      <p>The link may be old or mistyped. Let's take you back to Royal Home of Excellence.</p>
+      <div class="nf__ctas">
+        <a class="btn btn--primary" href="/">Go to homepage</a>
+        <a class="btn btn--ghost" href="/debate/">Debate Show</a>
+      </div>
+      <span class="nf__tag">...Inspiring Excellence</span>
+    </div>
+  </main>
+</body>
+</html>
