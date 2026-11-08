@@ -1,0 +1,22 @@
+# Cloudflare Pages response headers.
+
+# Admin dashboard: never indexed, never cached.
+/admin
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+  X-Frame-Options: DENY
+  Referrer-Policy: same-origin
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+  X-Frame-Options: DENY
+  Referrer-Policy: same-origin
+
+# Build and server files are published with the site but aren't pages.
+/netlify/*
+  X-Robots-Tag: noindex
+/cloudflare/*
+  X-Robots-Tag: noindex
+/supabase/*
+  X-Robots-Tag: noindex

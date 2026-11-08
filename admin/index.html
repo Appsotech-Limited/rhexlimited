@@ -833,7 +833,7 @@
       });
     }
     function requery(reference, btn) {
-      if (!hasPaystack) { toast("PAYSTACK_SECRET_KEY isn't set in Netlify."); }
+      if (!hasPaystack) { toast("PAYSTACK_SECRET_KEY isn't set in the hosting settings."); }
       return busy(btn, api("requery", { method: "POST", body: { reference: reference } })).then(function (j) {
         $("pd-title").textContent = "Payment check";
         $("pd-body").innerHTML = '<ul class="notes">' + (j.notes || []).map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>" +

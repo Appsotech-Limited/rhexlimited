@@ -1,0 +1,7 @@
+# Cloudflare Pages settings for rhexlimited.com (static site + debate show vote counting).
+# Build command (set in the Cloudflare dashboard): node debate/build-contestants.mjs
+name = "rhexlimited"
+pages_build_output_dir = "."
+compatibility_date = "2025-09-01"
+# node:crypto, Buffer and process.env for the vote and admin functions.
+compatibility_flags = ["nodejs_compat"]
