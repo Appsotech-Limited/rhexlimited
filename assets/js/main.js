@@ -80,7 +80,7 @@
   }
 
   /* ---------- Active nav link ---------- */
-  var links = $$('.nav__links a');
+  var links = $$('.nav__links a[href^="#"]');
   if ('IntersectionObserver' in window) {
     var sectionObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
