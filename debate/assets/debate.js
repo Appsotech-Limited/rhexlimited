@@ -93,16 +93,38 @@
     if (!url || location.protocol === "file:") return { refresh: function () {} };
     var every = Math.max(10, Number(cfg.tallyRefreshSeconds) || 30) * 1000;
     var timer = null;
-    function load() {
+    function load(bust) {
       clearTimeout(timer);
-      fetch(url, { headers: { Accept: "application/json" } })
+      var u = bust === true ? url + (url.indexOf("?") < 0 ? "?" : "&") + "_=" + Date.now() : url;
+      fetch(u, { headers: { Accept: "application/json" }, cache: bust === true ? "no-store" : "default" })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) { if (j && !j.hidden && j.totals) cb(j.totals); })
         .catch(function () {})
         .then(function () { timer = setTimeout(load, every); });
     }
     load();
-    return { refresh: load };
+    return { refresh: function () { load(true); } };
+  };
+  // Right after checkout: ask our server to confirm the payment with Paystack and
+  // record it, so the count updates in seconds without waiting for the webhook.
+  // Retries briefly while Paystack still reports the payment as processing.
+  RHEX.confirmPayment = function (reference, done) {
+    var tries = 0;
+    function attempt() {
+      tries++;
+      fetch("/api/debate/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ reference: reference })
+      })
+        .then(function (r) { return r.status === 200 ? "ok" : (r.status === 202 || r.status >= 500 ? "retry" : "stop"); })
+        .catch(function () { return "retry"; })
+        .then(function (state) {
+          if (state === "retry" && tries < 5) return setTimeout(attempt, 2000 * tries);
+          if (done) done(state === "ok");
+        });
+    }
+    attempt();
   };
   RHEX.votesLabel = function (n) { n = Number(n) || 0; return n.toLocaleString() + (n === 1 ? " vote" : " votes"); };
   RHEX.countUp = function (el, to) {

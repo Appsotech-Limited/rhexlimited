@@ -191,8 +191,9 @@
               $("thanks").classList.add("show");
               document.body.classList.add("celebrating");
               R.celebrate();
-              setTimeout(tally.refresh, 5000);
-              setTimeout(tally.refresh, 15000);
+              // Confirm with Paystack via our server and show the new count right away.
+              R.confirmPayment((tx && tx.reference) || reference, function () { tally.refresh(); });
+              setTimeout(tally.refresh, 20000);
             },
             onCancel: function () { btn.disabled = false; },
             onError: function (e3) { btn.disabled = false; err.textContent = (e3 && e3.message) || "Payment couldn’t start. Please try again."; }

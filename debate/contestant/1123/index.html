@@ -177,7 +177,7 @@
 
   <script src="https://js.paystack.co/v2/inline.js" defer></script>
   <script src="data/contestants.js?v=aa0b9a5918"></script>
-  <script src="assets/debate.js?v=29dc0d9171"></script>
+  <script src="assets/debate.js?v=d753969329"></script>
   <script>
     window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {};
@@ -295,14 +295,14 @@
             },
             onSuccess: function (tx) {
               btn.disabled = false;
-              $("thanks-msg").textContent = "Your " + n.toLocaleString() + (n === 1 ? " vote" : " votes") + " for " + c.name + " (No. " + c.number + ") went through. A receipt is on its way to " + email + ". Your votes appear in the count as soon as Paystack confirms the payment.";
+              $("thanks-msg").textContent = "Your " + n.toLocaleString() + (n === 1 ? " vote" : " votes") + " for " + c.name + " (No. " + c.number + ") went through. A receipt is on its way to " + email + ". Your votes will show in the count in a few seconds.";
               $("thanks-ref").textContent = "Reference: " + ((tx && tx.reference) || reference);
               $("thanks").classList.add("show");
               document.body.classList.add("celebrating");
               R.celebrate();
-              // Paystack confirms to our backend within seconds; refresh the count shortly after.
-              setTimeout(tally.refresh, 5000);
-              setTimeout(tally.refresh, 15000);
+              // Confirm with Paystack via our server and show the new count right away.
+              R.confirmPayment((tx && tx.reference) || reference, function () { tally.refresh(); });
+              setTimeout(tally.refresh, 20000);
             },
             onCancel: function () { btn.disabled = false; },
             onError: function (e2) { btn.disabled = false; err.textContent = (e2 && e2.message) || "Payment couldn’t start. Please try again."; }

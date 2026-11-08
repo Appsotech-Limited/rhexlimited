@@ -101,7 +101,7 @@
 
   <script src="https://js.paystack.co/v2/inline.js" defer></script>
   <script src="data/contestants.js?v=aa0b9a5918"></script>
-  <script src="assets/debate.js?v=29dc0d9171"></script>
+  <script src="assets/debate.js?v=d753969329"></script>
   <script>
     window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {};
@@ -195,8 +195,9 @@
               $("thanks").classList.add("show");
               document.body.classList.add("celebrating");
               R.celebrate();
-              setTimeout(tally.refresh, 5000);
-              setTimeout(tally.refresh, 15000);
+              // Confirm with Paystack via our server and show the new count right away.
+              R.confirmPayment((tx && tx.reference) || reference, function () { tally.refresh(); });
+              setTimeout(tally.refresh, 20000);
             },
             onCancel: function () { btn.disabled = false; },
             onError: function (e3) { btn.disabled = false; err.textContent = (e3 && e3.message) || "Payment couldn’t start. Please try again."; }
