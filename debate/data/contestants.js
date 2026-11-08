@@ -16,7 +16,7 @@ window.RHEX_DEBATE = {
     showSubtitle: "The President",
 
     // Paystack PUBLIC key (starts with pk_live_ or pk_test_). Never put the secret key here.
-    paystackPublicKey: "pk_test_REPLACE_WITH_YOUR_PAYSTACK_PUBLIC_KEY",
+    paystackPublicKey: "pk_live_69f5a44a796e68c35b677ef61fd98b7f572df538",
 
     currency: "NGN",
     votePrice: 100,              // naira per vote
