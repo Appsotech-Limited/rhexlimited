@@ -565,3 +565,41 @@ footer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 .qr-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .qr-actions [hidden] { display: none; }
 @media (max-width: 600px) { .qr-actions .btn { width: 100%; } }
+
+/* Phones: photo, name and the pay controls all fit on the first screen.
+   The photo is sized from the screen height (never covered); the vote card sits
+   right under the name; votes so far, the message and sharing follow below. */
+@media (max-width: 600px) {
+  .cpage { padding-top: 12px; }
+  .back { margin-bottom: 12px; }
+  .portrait { width: auto; max-width: none; height: clamp(230px, calc(100svh - 480px), 520px); aspect-ratio: 4 / 5; }
+  .portrait .frame { height: 100%; aspect-ratio: auto; border-radius: 22px; }
+  .portrait .frame img { object-position: center top; }
+  .portrait .badge { display: none; } /* the number is shown under the name; keep the photo uncovered */
+  .cgrid-2 { gap: 14px; }
+  .cinfo { display: flex; flex-direction: column; text-align: center; }
+  .cinfo > .eyebrow { display: none; }
+  .cinfo h1 { font-size: clamp(2rem, 9vw, 2.6rem); margin: 0 0 2px; line-height: 1.05; }
+  .cinfo .show { font-size: .64rem; }
+  .cinfo .vote-panel { order: 1; margin-top: 12px; padding: 16px 14px 14px; text-align: left; }
+  .cinfo .tally { order: 2; margin-top: 18px; }
+  .cinfo .appeal { order: 3; text-align: left; }
+  .cinfo .share { order: 4; }
+  /* inside the vote card: amounts, email, Pay first; custom number and name after */
+  .vote-panel form, form.vote-panel { display: flex; flex-direction: column; }
+  .vote-panel h2 { font-size: 1.3rem; order: 0; margin: 0 0 10px; }
+  .vote-panel .rate, .vote-panel .total { display: none; }
+  .vote-panel .bundles { order: 1; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .vote-panel .bundle { padding: 9px 2px; }
+  .vote-panel .bundle b { font-size: 1.45rem; }
+  .vote-panel .row2 { display: contents; }
+  .vote-panel .field { margin-top: 10px; }
+  .vote-panel .field:has(#email) { order: 2; }
+  .vote-panel .field:has(#email) label { display: none; }
+  .vote-panel .vote-btn { order: 3; margin-top: 10px; padding: 16px 12px; }
+  .vote-panel .err { order: 4; min-height: 0; }
+  .vote-panel .notice { order: 4; }
+  .vote-panel .secure { order: 5; margin-top: 8px; font-size: .68rem; }
+  .vote-panel .field:has(.stepper) { order: 6; margin-top: 16px; }
+  .vote-panel .field:has(#voter-name) { order: 7; }
+}
