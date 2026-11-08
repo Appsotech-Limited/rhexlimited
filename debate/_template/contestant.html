@@ -8,13 +8,18 @@
   <title>{{TITLE}}</title>
   <meta name="description" content="{{DESCRIPTION}}">
   <link rel="canonical" href="{{URL}}">
+  <meta name="robots" content="{{ROBOTS}}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Royal Home of Excellence">
   <meta property="og:url" content="{{URL}}">
   <meta property="og:title" content="{{TITLE}}">
   <meta property="og:description" content="{{DESCRIPTION}}">
   <meta property="og:image" content="{{IMAGE}}">
+  <meta property="og:image:alt" content="{{IMAGE_ALT}}">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{TITLE}}">
+  <meta name="twitter:description" content="{{DESCRIPTION}}">
+  <meta name="twitter:image" content="{{IMAGE}}">
   <script>window.RHEX_CONTESTANT = {{NUMBER_JSON}};</script>
   <meta name="theme-color" content="#15161C">
   <link rel="icon" href="../assets/img/favicon.png">
@@ -70,7 +75,7 @@
 
         <div class="cinfo">
           <span class="eyebrow reveal">RHEX Reality Debate Show</span>
-          <h1 class="reveal d1" id="name"></h1>
+          <h1 class="reveal d1" id="name">{{NAME}}</h1>
           <div class="show reveal d1">Contestant <span id="num"></span> · <span class="gold-text">The President</span></div>
           <div class="tally" id="tally" hidden>
             <div><b id="tally-votes">0</b><small>Votes so far</small></div>
