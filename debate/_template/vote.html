@@ -175,6 +175,8 @@
         try {
           new window.PaystackPop().newTransaction({
             key: key, email: email, amount: n * price * 100, currency: cfg.currency || "NGN", reference: reference,
+            // Bank Transfer first so checkout opens on it; card, USSD and bank stay available.
+            channels: cfg.paymentChannels || ["bank_transfer", "card", "ussd", "bank"],
             metadata: {
               show: "RHEX Reality Debate Show (The President)", source: "quick-vote",
               voter_name: ($("voter-name").value || "").trim().slice(0, 80) || undefined,
