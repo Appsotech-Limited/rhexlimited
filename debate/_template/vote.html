@@ -49,20 +49,9 @@
 
       <form id="vote-form" novalidate>
         <div class="bundles" role="group" aria-label="How many votes" id="bundles"></div>
-        <div class="qv-row">
-          <div class="stepper" aria-label="Number of votes">
-            <button type="button" data-step="-1" aria-label="One vote fewer">−</button>
-            <input id="votes" type="number" inputmode="numeric" min="1" step="1" value="5" aria-label="Number of votes">
-            <button type="button" data-step="1" aria-label="One vote more">+</button>
-          </div>
-        </div>
-        <div class="field">
-          <label for="voter-name">Your name <small>(optional)</small></label>
-          <input id="voter-name" type="text" autocomplete="name" maxlength="80" placeholder="Your name">
-        </div>
-        <div class="field">
-          <label for="email">Email for your receipt</label>
-          <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <div class="field qv-email">
+          <label for="email" class="sr-only">Email for your receipt</label>
+          <input id="email" type="email" autocomplete="email" placeholder="Email for your receipt" required>
         </div>
         <button class="btn btn-primary vote-btn" type="submit" id="pay">Vote now</button>
         <div class="err" id="err" role="alert"></div>
@@ -70,6 +59,20 @@
         <div class="secure">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
           Secured by Paystack · card, bank transfer or USSD
+        </div>
+        <div class="qv-extra">
+          <div class="qv-row">
+            <label class="qv-label" for="votes">Another number of votes</label>
+            <div class="stepper" aria-label="Number of votes">
+              <button type="button" data-step="-1" aria-label="One vote fewer">−</button>
+              <input id="votes" type="number" inputmode="numeric" min="1" step="1" value="5" aria-label="Number of votes">
+              <button type="button" data-step="1" aria-label="One vote more">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="voter-name">Your name <small>(optional)</small></label>
+            <input id="voter-name" type="text" autocomplete="name" maxlength="80" placeholder="Your name">
+          </div>
         </div>
       </form>
       <a class="qv-more" id="profile-link" href="./">See profile, standings and all contestants →</a>
