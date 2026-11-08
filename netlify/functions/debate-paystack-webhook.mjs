@@ -12,10 +12,9 @@
 //   SUPABASE_SERVICE_ROLE_KEY  service_role key from Supabase → Project settings → API
 //   VOTE_PRICE_NAIRA           optional, defaults to 100. Must match votePrice in debate/data/contestants.js
 import crypto from "node:crypto";
+import { rowFromTransaction, addFlags } from "../lib/debate-db.mjs";
 
 export const config = { path: "/api/debate/paystack-webhook" };
-
-const REFERENCE_PREFIX = "RHEX-PRES-";
 
 export function validSignature(rawBody, signature, secret) {
   if (!signature || !secret) return false;
@@ -28,28 +27,7 @@ export function validSignature(rawBody, signature, secret) {
 // Turns a Paystack charge.success event into a vote row, or returns null if it isn't a debate vote.
 export function voteFromEvent(event, priceNaira) {
   if (!event || event.event !== "charge.success") return null;
-  const d = event.data || {};
-  if (d.status !== "success") return null;
-  if (typeof d.reference !== "string" || !d.reference.startsWith(REFERENCE_PREFIX)) return null;
-  if ((d.currency || "NGN") !== "NGN") return null;
-
-  const meta = typeof d.metadata === "string" ? safeJson(d.metadata) : d.metadata || {};
-  const contestant = String(meta.contestant_number || "").trim();
-  if (!/^[A-Za-z0-9-]{1,20}$/.test(contestant)) return null;
-
-  // Count votes from the money actually received, not from what the browser claimed.
-  const amountKobo = Number(d.amount);
-  const votes = Math.floor(amountKobo / (priceNaira * 100));
-  if (!Number.isFinite(votes) || votes < 1) return null;
-
-  return {
-    reference: d.reference,
-    contestant_number: contestant,
-    votes,
-    amount_kobo: amountKobo,
-    email: (d.customer && d.customer.email) || null,
-    paid_at: d.paid_at || d.paidAt || new Date().toISOString(),
-  };
+  return rowFromTransaction(event.data || {}, priceNaira);
 }
 
 function safeJson(s) {
@@ -86,8 +64,9 @@ export default async (req) => {
   }
 
   const event = safeJson(raw);
-  const row = voteFromEvent(event, Number(env.VOTE_PRICE_NAIRA) || 100);
+  let row = voteFromEvent(event, Number(env.VOTE_PRICE_NAIRA) || 100);
   if (!row) return new Response("Ignored", { status: 200 });
+  row = await addFlags(row, env).catch(() => row);
 
   try {
     await saveVote(row, env);
