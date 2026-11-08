@@ -10,7 +10,7 @@ import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const SITE = (process.env.SITE_URL || process.env.URL || "https://www.rhexlimited.com").replace(/\/$/, "");
+const SITE = (process.env.SITE_URL || process.env.URL || "https://rhexlimited.com").replace(/\/$/, "");
 
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(here, "data/contestants.js"), "utf8"), sandbox);
@@ -29,7 +29,8 @@ for (const c of contestants) {
   seen.add(num);
 
   const url = `${SITE}/debate/contestant/${num}`;
-  const image = c.photo ? `${SITE}/debate/${c.photo.replace(/^\/?(debate\/)?/, "")}` : `${SITE}/assets/img/rhex-logo.png`;
+  const pic = c.poster || c.photo;
+  const image = pic ? `${SITE}/debate/${pic.replace(/^\/?(debate\/)?/, "")}` : `${SITE}/assets/img/rhex-logo.png`;
   const html = template
     .replaceAll("{{TITLE}}", esc(`Vote ${c.name} · Contestant ${num} · The President`))
     .replaceAll("{{DESCRIPTION}}", esc(`Vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). Each vote is ₦${price.toLocaleString("en-NG")}.`))

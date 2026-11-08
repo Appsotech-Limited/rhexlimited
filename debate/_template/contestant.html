@@ -170,7 +170,7 @@
       $("name").textContent = c.name;
       $("num").textContent = c.number;
       $("price").textContent = R.naira(price);
-      var msg = c.message || [];
+      var msg = c.message || cfg.defaultMessage || [];
       $("appeal").innerHTML = msg.map(function (p) { return "<p>" + R.escape(p) + "</p>"; }).join("") +
         (msg.length ? '<div class="sig">' + R.escape(c.name) + "</div>" : "");
 
