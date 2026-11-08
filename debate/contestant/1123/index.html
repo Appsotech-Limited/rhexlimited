@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/debate/">
+  <!-- Generated per contestant by debate/build-contestants.mjs. Edit this template, not the copies in debate/contestant/. -->
+  <title>Vote Nwata Splendour Ugonna · Contestant 1123 · The President</title>
+  <meta name="description" content="Vote for Nwata Splendour Ugonna (Contestant 1123) in the RHEX Reality Debate Show (The President). Each vote is ₦100.">
+  <link rel="canonical" href="https://www.rhexlimited.com/debate/contestant/1123">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Royal Home of Excellence">
+  <meta property="og:url" content="https://www.rhexlimited.com/debate/contestant/1123">
+  <meta property="og:title" content="Vote Nwata Splendour Ugonna · Contestant 1123 · The President">
+  <meta property="og:description" content="Vote for Nwata Splendour Ugonna (Contestant 1123) in the RHEX Reality Debate Show (The President). Each vote is ₦100.">
+  <meta property="og:image" content="https://www.rhexlimited.com/debate/assets/contestants/1123-poster.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script>window.RHEX_CONTESTANT = "1123";</script>
+  <meta name="theme-color" content="#15161C">
+  <link rel="icon" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <script>
+    (function () { try { var t = localStorage.getItem("rhex-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/debate.css">
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="../" aria-label="Royal Home of Excellence home">
+        <img data-logo src="../assets/img/rhex-logo.png" alt="">
+        <span class="wordmark">RHEX<small>Royal Home of Excellence</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Debate show">
+        <a href="./#show">The Show</a>
+        <a href="./#contestants" class="keep">All Contestants</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch light or dark mode">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="cpage">
+    <div class="wrap" id="app">
+      <a class="back reveal" href="./#contestants"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>All contestants</a>
+
+      <div id="notfound" hidden>
+        <div class="section-head center" style="padding:60px 0">
+          <span class="eyebrow both">The President</span>
+          <h2>Contestant not found</h2>
+          <p class="lede">This link doesn’t match a contestant. It may have a typo, or the contestant may have left the show.</p>
+          <a class="btn btn-primary" href="contestant/">Find a contestant</a>
+        </div>
+      </div>
+
+      <div class="cgrid-2" id="profile" hidden>
+        <div class="portrait reveal">
+          <span class="ring" aria-hidden="true"></span>
+          <div class="frame" id="art"></div>
+          <div class="badge"><small>Contestant</small><b id="badge-num"></b></div>
+        </div>
+
+        <div class="cinfo">
+          <span class="eyebrow reveal">RHEX Reality Debate Show</span>
+          <h1 class="reveal d1" id="name"></h1>
+          <div class="show reveal d1">Contestant <span id="num"></span> · <span class="gold-text">The President</span></div>
+          <div class="tally" id="tally" hidden>
+            <div><b id="tally-votes">0</b><small>Votes so far</small></div>
+            <div><b id="tally-rank">–</b><small>Current position</small></div>
+          </div>
+          <div class="appeal reveal d2" id="appeal"></div>
+
+          <form class="vote-panel reveal d2" id="vote-form" novalidate>
+            <h2>Cast your votes</h2>
+            <p class="rate">Each vote is <b id="price"></b>. Cast as many as you like in one payment.</p>
+
+            <div class="bundles" role="group" aria-label="Quick vote amounts" id="bundles"></div>
+
+            <div class="row2">
+              <div class="field">
+                <label for="votes">Number of votes</label>
+                <div class="stepper">
+                  <button type="button" data-step="-1" aria-label="One vote fewer">−</button>
+                  <input id="votes" type="number" inputmode="numeric" min="1" step="1" value="5">
+                  <button type="button" data-step="1" aria-label="One vote more">+</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="email">Your email (for the receipt)</label>
+                <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+              </div>
+            </div>
+
+            <div class="total"><span>Total</span><b id="total"></b></div>
+            <button class="btn btn-primary vote-btn" type="submit" id="pay">Vote now</button>
+            <div class="err" id="err" role="alert"></div>
+            <div class="notice" id="setup-notice" hidden>Online voting isn’t switched on yet. Please check back soon.</div>
+            <div class="secure">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              Secured by Paystack · card, bank transfer or USSD
+            </div>
+          </form>
+
+          <div class="share reveal d3">
+            <span>Share</span>
+            <a class="chip" id="share-wa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>WhatsApp</a>
+            <a class="chip" id="share-x" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.2-8.3L2 3h6.4l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg>X</a>
+            <a class="chip" id="share-fb" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V6.8c0-.8.2-1.3 1.4-1.3H17V2.6A21 21 0 0 0 14.6 2.5C12.2 2.5 10.6 4 10.6 6.6v1.9H8V12h2.6v9.5H14V12h2.7l.4-3.5H14z"/></svg>Facebook</a>
+            <button class="chip" type="button" id="share-copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Copy link</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="thanks" id="thanks" role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+    <div class="card">
+      <span class="eyebrow both">Votes received</span>
+      <h2 id="thanks-title" class="gold-text">Thank you!</h2>
+      <p id="thanks-msg"></p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" type="button" id="thanks-share">Share this page</button>
+        <button class="btn btn-ghost" type="button" id="thanks-close">Vote again</button>
+      </div>
+      <div class="ref" id="thanks-ref"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+        <span>© <span id="year"></span> Royal Home of Excellence Ltd. · +234 810 701 1517 · +234 909 740 4887</span>
+        <span>Payments secured by Paystack</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://js.paystack.co/v2/inline.js" defer></script>
+  <script src="data/contestants.js"></script>
+  <script src="assets/debate.js"></script>
+  <script>
+    (function () {
+      var R = window.RHEX, cfg = R.data.config || {};
+      var price = Number(cfg.votePrice) || 100;
+      var maxVotes = Number(cfg.maxVotesPerPayment) || 10000;
+      var key = String(cfg.paystackPublicKey || "");
+      var keyReady = /^pk_(live|test)_[A-Za-z0-9]+$/.test(key) && key.indexOf("REPLACE") === -1;
+
+      var m = location.pathname.match(/\/contestant\/([^\/]+)/);
+      var id = String(window.RHEX_CONTESTANT || (m && decodeURIComponent(m[1])) || "");
+      var c = (R.data.contestants || []).filter(function (x) { return String(x.number) === id.trim(); })[0];
+      var $ = function (s) { return document.getElementById(s); };
+
+      if (!c) { $("notfound").hidden = false; return; }
+      $("profile").hidden = false;
+
+      var pageUrl = location.origin + "/debate/" + R.contestantUrl(c);
+      document.title = c.name + " · Contestant " + c.number + " · The President";
+
+      $("art").innerHTML = R.artHTML(c);
+      $("badge-num").textContent = c.number;
+      $("name").textContent = c.name;
+      $("num").textContent = c.number;
+      $("price").textContent = R.naira(price);
+      var msg = c.message || cfg.defaultMessage || [];
+      $("appeal").innerHTML = msg.map(function (p) { return "<p>" + R.escape(p) + "</p>"; }).join("") +
+        (msg.length ? '<div class="sig">' + R.escape(c.name) + "</div>" : "");
+
+      /* ----- vote amount ----- */
+      var votesEl = $("votes"), bundlesEl = $("bundles");
+      var bundles = cfg.voteBundles || [1, 5, 10, 20];
+      bundlesEl.innerHTML = bundles.map(function (n) {
+        return '<button type="button" class="bundle" data-n="' + n + '" aria-pressed="false"><b>' + n + "</b><small>" + R.naira(n * price) + "</small></button>";
+      }).join("");
+      function votes() {
+        var n = Math.floor(Number(votesEl.value));
+        return isFinite(n) ? n : 0;
+      }
+      function update() {
+        var n = votes();
+        $("total").textContent = R.naira(Math.max(0, n) * price);
+        bundlesEl.querySelectorAll(".bundle").forEach(function (b) { b.setAttribute("aria-pressed", String(Number(b.dataset.n) === n)); });
+        $("pay").textContent = n > 0 ? "Vote " + n.toLocaleString() + (n === 1 ? " time" : " times") + " · " + R.naira(n * price) : "Vote now";
+      }
+      bundlesEl.addEventListener("click", function (e) {
+        var b = e.target.closest(".bundle"); if (!b) return;
+        votesEl.value = b.dataset.n; update();
+        var r = b.getBoundingClientRect(); R.burst(r.left + r.width / 2, r.top + r.height / 2, 0.35);
+      });
+      document.querySelectorAll("[data-step]").forEach(function (btn) {
+        btn.addEventListener("click", function () { votesEl.value = Math.max(1, votes() + Number(btn.dataset.step)); update(); });
+      });
+      votesEl.addEventListener("input", update);
+      update();
+
+      /* ----- live count ----- */
+      var all = R.data.contestants || [];
+      var tally = R.watchTally(function (t) {
+        var mine = Number(t[c.number]) || 0;
+        var rank = 1 + all.filter(function (x) { return (Number(t[x.number]) || 0) > mine; }).length;
+        R.countUp($("tally-votes"), mine);
+        $("tally-rank").textContent = mine > 0 ? rank + " of " + all.length : "–";
+        $("tally").hidden = false;
+      });
+
+      if (!keyReady) { $("setup-notice").hidden = false; $("pay").disabled = true; }
+
+      /* ----- payment ----- */
+      var form = $("vote-form"), err = $("err");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        err.textContent = "";
+        var n = votes(), email = $("email").value.trim();
+        if (n < 1) { err.textContent = "Choose at least one vote."; votesEl.focus(); return; }
+        if (n > maxVotes) { err.textContent = "You can cast up to " + maxVotes.toLocaleString() + " votes per payment."; votesEl.focus(); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Enter a valid email so Paystack can send your receipt."; $("email").focus(); return; }
+        /* ----- live count ----- */
+      var all = R.data.contestants || [];
+      var tally = R.watchTally(function (t) {
+        var mine = Number(t[c.number]) || 0;
+        var rank = 1 + all.filter(function (x) { return (Number(t[x.number]) || 0) > mine; }).length;
+        R.countUp($("tally-votes"), mine);
+        $("tally-rank").textContent = mine > 0 ? rank + " of " + all.length : "–";
+        $("tally").hidden = false;
+      });
+
+      if (!keyReady) { err.textContent = "Online voting isn’t switched on yet."; return; }
+        if (typeof window.PaystackPop !== "function") { err.textContent = "The payment window couldn’t load. Check your connection and try again."; return; }
+
+        var btn = $("pay"); btn.disabled = true;
+        var reference = "RHEX-PRES-" + c.number + "-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+        try {
+          new window.PaystackPop().newTransaction({
+            key: key,
+            email: email,
+            amount: n * price * 100, // kobo
+            currency: cfg.currency || "NGN",
+            reference: reference,
+            metadata: {
+              show: "RHEX Reality Debate Show (The President)",
+              contestant_number: String(c.number),
+              contestant_name: c.name,
+              votes: n,
+              custom_fields: [
+                { display_name: "Contestant", variable_name: "contestant", value: c.name + " (No. " + c.number + ")" },
+                { display_name: "Votes", variable_name: "votes", value: String(n) }
+              ]
+            },
+            onSuccess: function (tx) {
+              btn.disabled = false;
+              $("thanks-msg").textContent = "Your " + n.toLocaleString() + (n === 1 ? " vote" : " votes") + " for " + c.name + " (No. " + c.number + ") went through. A receipt is on its way to " + email + ". Your votes appear in the count as soon as Paystack confirms the payment.";
+              $("thanks-ref").textContent = "Reference: " + ((tx && tx.reference) || reference);
+              $("thanks").classList.add("show");
+              document.body.classList.add("celebrating");
+              R.celebrate();
+              // Paystack confirms to our backend within seconds; refresh the count shortly after.
+              setTimeout(tally.refresh, 5000);
+              setTimeout(tally.refresh, 15000);
+            },
+            onCancel: function () { btn.disabled = false; },
+            onError: function (e2) { btn.disabled = false; err.textContent = (e2 && e2.message) || "Payment couldn’t start. Please try again."; }
+          });
+        } catch (ex) {
+          btn.disabled = false;
+          err.textContent = "Payment couldn’t start. Please try again.";
+        }
+      });
+
+      /* ----- sharing ----- */
+      var shareText = "Please vote for " + c.name + " (Contestant " + c.number + ") in the RHEX Reality Debate Show (The President). Each vote is " + R.naira(price) + ".";
+      $("share-wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText + " " + pageUrl);
+      $("share-x").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText) + "&url=" + encodeURIComponent(pageUrl);
+      $("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(pageUrl);
+      function copyLink(label) {
+        var done = function () { if (label) { var old = label.textContent; label.textContent = "Link copied"; setTimeout(function () { label.textContent = old; }, 1800); } };
+        if (navigator.clipboard) navigator.clipboard.writeText(pageUrl).then(done, function () { prompt("Copy this link:", pageUrl); });
+        else prompt("Copy this link:", pageUrl);
+      }
+      $("share-copy").addEventListener("click", function () { copyLink($("share-copy").querySelector("span")); });
+      $("thanks-share").addEventListener("click", function () {
+        if (navigator.share) navigator.share({ title: document.title, text: shareText, url: pageUrl }).catch(function () {});
+        else copyLink($("thanks-share"));
+      });
+      function closeThanks() { $("thanks").classList.remove("show"); document.body.classList.remove("celebrating"); }
+      $("thanks-close").addEventListener("click", closeThanks);
+      $("thanks").addEventListener("click", function (e) { if (e.target === $("thanks")) closeThanks(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeThanks(); });
+    })();
+  </script>
+</body>
+</html>

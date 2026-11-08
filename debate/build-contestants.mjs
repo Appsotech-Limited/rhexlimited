@@ -29,7 +29,8 @@ for (const c of contestants) {
   seen.add(num);
 
   const url = `${SITE}/debate/contestant/${num}`;
-  const image = c.photo ? `${SITE}/debate/${c.photo.replace(/^\/?(debate\/)?/, "")}` : `${SITE}/assets/img/rhex-logo.png`;
+  const pic = c.poster || c.photo;
+  const image = pic ? `${SITE}/debate/${pic.replace(/^\/?(debate\/)?/, "")}` : `${SITE}/assets/img/rhex-logo.png`;
   const html = template
     .replaceAll("{{TITLE}}", esc(`Vote ${c.name} · Contestant ${num} · The President`))
     .replaceAll("{{DESCRIPTION}}", esc(`Vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). Each vote is ₦${price.toLocaleString("en-NG")}.`))
