@@ -537,18 +537,30 @@ footer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
   background: var(--surface-2); border: 1px solid var(--line); box-shadow: var(--shadow);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
 }
-.qv-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; margin-bottom: 20px; }
-.qv-photo { width: min(100%, 300px, calc(46svh * .8)); aspect-ratio: 4 / 5; flex: none; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 2px var(--gold), 0 18px 44px -14px rgba(249, 160, 27, .6); }
+.qv-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 14px; }
+.qv-photo { height: clamp(200px, calc(100svh - 400px), 480px); max-width: 100%; aspect-ratio: 4 / 5; flex: none; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 2px var(--gold), 0 18px 44px -14px rgba(249, 160, 27, .6); }
 .qv-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .qv-photo .monogram { width: 100%; height: 100%; }
 .qv-photo .monogram span { font-size: 4rem; }
-.qv-head h1 { font-size: clamp(1.8rem, 7vw, 2.3rem); margin: 6px 0 4px; }
+.qv-head h1 { font-size: clamp(1.8rem, 7vw, 2.3rem); margin: 2px 0 2px; line-height: 1.05; }
 .qv-head .eyebrow { font-size: .62rem; letter-spacing: .22em; }
 .qv-head .eyebrow::before { display: none; }
 .qv-count { font-size: .8rem; color: var(--text-soft); }
 .qv-count b { font-variant-numeric: lining-nums; color: var(--accent); }
 .qv-row { margin-top: 12px; }
-.qv .vote-btn { margin-top: 18px; }
+.qv .vote-btn { margin-top: 10px; }
+.qv .qv-email { margin-top: 10px; }
+.qv .bundles { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.qv .bundle { padding: 9px 2px; }
+.qv .bundle b { font-size: 1.45rem; }
+.qv .secure { margin-top: 8px; }
+.qv-extra { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.qv-label { display: block; font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 600px) {
+  .qv-main { place-items: start center; padding: 12px 12px 24px; }
+  .qv-card { padding: 14px 14px 18px; border-radius: 22px; }
+}
 .qv-more { display: block; text-align: center; margin-top: 18px; font-size: .78rem; color: var(--text-soft); text-decoration: none; }
 .qv-more:hover { color: var(--text); }
 .qv-main { grid-template-columns: minmax(0, 1fr); justify-items: center; }
@@ -565,3 +577,41 @@ footer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 .qr-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .qr-actions [hidden] { display: none; }
 @media (max-width: 600px) { .qr-actions .btn { width: 100%; } }
+
+/* Phones: photo, name and the pay controls all fit on the first screen.
+   The photo is sized from the screen height (never covered); the vote card sits
+   right under the name; votes so far, the message and sharing follow below. */
+@media (max-width: 600px) {
+  .cpage { padding-top: 12px; }
+  .back { margin-bottom: 12px; }
+  .portrait { width: auto; max-width: none; height: clamp(230px, calc(100svh - 480px), 520px); aspect-ratio: 4 / 5; }
+  .portrait .frame { height: 100%; aspect-ratio: auto; border-radius: 22px; }
+  .portrait .frame img { object-position: center top; }
+  .portrait .badge { display: none; } /* the number is shown under the name; keep the photo uncovered */
+  .cgrid-2 { gap: 14px; }
+  .cinfo { display: flex; flex-direction: column; text-align: center; }
+  .cinfo > .eyebrow { display: none; }
+  .cinfo h1 { font-size: clamp(2rem, 9vw, 2.6rem); margin: 0 0 2px; line-height: 1.05; }
+  .cinfo .show { font-size: .64rem; }
+  .cinfo .vote-panel { order: 1; margin-top: 12px; padding: 16px 14px 14px; text-align: left; }
+  .cinfo .tally { order: 2; margin-top: 18px; }
+  .cinfo .appeal { order: 3; text-align: left; }
+  .cinfo .share { order: 4; }
+  /* inside the vote card: amounts, email, Pay first; custom number and name after */
+  .vote-panel form, form.vote-panel { display: flex; flex-direction: column; }
+  .vote-panel h2 { font-size: 1.3rem; order: 0; margin: 0 0 10px; }
+  .vote-panel .rate, .vote-panel .total { display: none; }
+  .vote-panel .bundles { order: 1; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .vote-panel .bundle { padding: 9px 2px; }
+  .vote-panel .bundle b { font-size: 1.45rem; }
+  .vote-panel .row2 { display: contents; }
+  .vote-panel .field { margin-top: 10px; }
+  .vote-panel .field:has(#email) { order: 2; }
+  .vote-panel .field:has(#email) label { display: none; }
+  .vote-panel .vote-btn { order: 3; margin-top: 10px; padding: 16px 12px; }
+  .vote-panel .err { order: 4; min-height: 0; }
+  .vote-panel .notice { order: 4; }
+  .vote-panel .secure { order: 5; margin-top: 8px; font-size: .68rem; }
+  .vote-panel .field:has(.stepper) { order: 6; margin-top: 16px; }
+  .vote-panel .field:has(#voter-name) { order: 7; }
+}
