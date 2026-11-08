@@ -21,7 +21,7 @@ Contestants are stored in Supabase (`debate_contestants`), and photos in the pub
 
 The list in `data/contestants.js` is now only a fallback for when the live list can't be loaded. Settings such as the vote price and Paystack public key are still in that file.
 
-Each contestant's own page (`/debate/contestant/<number>`, with its WhatsApp/Facebook preview) is written at deploy time by `build-contestants.mjs`, which reads the list from Supabase. A contestant added in the dashboard can be voted for straight away; their link preview shows their name and photo after the next deploy. To make that automatic, create a build hook in Netlify (**Site configuration → Build & deploy → Build hooks**) and save its URL as `DEBATE_BUILD_HOOK_URL`.
+Each contestant's own page (`/debate/contestant/<number>`, with its WhatsApp/Facebook preview) is written at deploy time by `build-contestants.mjs`, which reads the list from Supabase. A contestant added in the dashboard can be voted for straight away; their link preview shows their name and photo after the next deploy. To make that automatic, create a deploy hook in Cloudflare Pages (**Settings → Builds → Deploy hooks**) and save its URL as `DEBATE_BUILD_HOOK_URL`.
 
 Admin setup: run `supabase/debate_admin.sql` once in Supabase, then add `ADMIN_PASSWORD` (10+ characters) in Netlify's environment variables and redeploy. Eight wrong passwords from one connection lock it out for 15 minutes. Sessions last 12 hours; changing the password signs everyone out.
 
@@ -34,17 +34,16 @@ Everything below is free-tier. Allow about 20 minutes.
 2. Open **SQL Editor → New query**, paste the contents of `supabase/debate_votes.sql`, and click **Run**.
 3. In **Project settings → API**, copy the **Project URL** and the **service_role** key. Keep the service_role key private.
 
-### 2. Netlify (hosts the site and runs the vote counter)
-1. At netlify.com, choose **Add new site → Import an existing project**, then pick this GitHub repo and the `main` branch. The build settings are read from `netlify.toml`.
-2. In **Site configuration → Environment variables**, add:
-   | Name | Value |
-   | --- | --- |
-   | `PAYSTACK_SECRET_KEY` | your `sk_live_…` key from Paystack |
-   | `SUPABASE_URL` | the Project URL from step 1 |
-   | `SUPABASE_SERVICE_ROLE_KEY` | the service_role key from step 1 |
-   | `VOTE_PRICE_NAIRA` | `100` (must match `votePrice` in `data/contestants.js`) |
-   | `DEBATE_TALLY_HIDDEN` | optional. Set it to `true` to hide vote counts, for example during the final days. |
-3. Point **rhexlimited.com** at the site under **Domain management**, then redeploy.
+### 2. Cloudflare Pages (hosts the site and runs the vote counter)
+Follow **Deploy (Cloudflare Pages)** in the root `README.md`. These variables are the ones the vote counter needs:
+
+| Name | Value |
+| --- | --- |
+| `PAYSTACK_SECRET_KEY` | your `sk_live_…` key from Paystack (secret) |
+| `SUPABASE_URL` | the Project URL from step 1 |
+| `SUPABASE_SERVICE_ROLE_KEY` | the service_role key from step 1 (secret) |
+| `VOTE_PRICE_NAIRA` | `100` (must match `votePrice` in `data/contestants.js`) |
+| `DEBATE_TALLY_HIDDEN` | optional. Set it to `true` to hide vote counts, for example during the final days. |
 
 ### 3. Paystack
 1. Put your **public** key (`pk_live_…`) in `paystackPublicKey` in `data/contestants.js`. Never put the secret key in website files.

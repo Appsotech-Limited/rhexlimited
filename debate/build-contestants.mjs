@@ -2,7 +2,7 @@
 // so each contestant gets a clean link (/debate/contestant/1120) with its own
 // WhatsApp/Facebook preview (name, number and photo).
 //
-// Netlify runs this on every deploy (see netlify.toml). To preview locally:
+// The host runs this on every deploy (Cloudflare Pages build command, or netlify.toml). To preview locally:
 //   node debate/build-contestants.mjs
 import fs from "node:fs";
 import path from "node:path";
@@ -133,7 +133,8 @@ if (fs.existsSync(voteRoot)) {
   }
 }
 
-// Shown for /debate/contestant/<anything unknown> (see the 404 rule in netlify.toml).
+// Shown for /debate/contestant/<anything unknown>: Netlify uses the 404 rule in
+// netlify.toml, and Cloudflare Pages serves the nearest 404.html (written below).
 const generic = template
   .replaceAll("{{TITLE}}", "Contestant not found · The President")
   .replaceAll("{{DESCRIPTION}}", "Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.")
@@ -148,6 +149,7 @@ const generic = template
   .replaceAll("{{NUMBER_JSON}}", "null");
 fs.mkdirSync(path.join(outRoot, "_unknown"), { recursive: true });
 fs.writeFileSync(path.join(outRoot, "_unknown", "index.html"), generic);
+fs.writeFileSync(path.join(outRoot, "404.html"), generic);
 seen.add("_unknown");
 
 // Remove pages for contestants no longer in the list.

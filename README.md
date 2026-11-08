@@ -29,9 +29,38 @@ python3 -m http.server 8000
 
 Theme preference is stored in `localStorage` under `rhex-theme`. Without a saved preference, the site follows the system setting.
 
-## Deploy
+## Deploy (Cloudflare Pages)
 
-Any static host works, including GitHub Pages, Netlify and Vercel. Serve the repository root.
+The site is hosted on Cloudflare Pages, which is free and adds no badge. The vote and admin API runs as Pages Functions.
+
+| What | Where |
+| --- | --- |
+| Pages settings (output dir `.`, `nodejs_compat`) | `wrangler.toml` |
+| Build command | `node debate/build-contestants.mjs` (set in the Cloudflare dashboard) |
+| API routes (`/api/debate/*`, `/api/admin/*`) and short vote links (`/v/<number>`) | `functions/`, which call the shared handlers in `netlify/functions/` through `cloudflare/adapter.mjs` |
+| Admin headers | `_headers` |
+| Not-found pages | `404.html`, and `debate/contestant/404.html` (written by the build) |
+
+### One-time setup
+
+1. In Cloudflare, go to **Workers & Pages → Create → Pages → Connect to Git** and pick `Appsotech-Limited/rhexlimited`, branch `main`.
+2. Set **Build command** to `node debate/build-contestants.mjs` and **Build output directory** to `.`.
+3. Under **Settings → Variables and Secrets**, add the same values the site used on Netlify, for Production:
+   - `SUPABASE_URL`, `VOTE_PRICE_NAIRA` (100) and `SITE_URL` (`https://rhexlimited.com`) as plain text
+   - `SUPABASE_SERVICE_ROLE_KEY`, `PAYSTACK_SECRET_KEY` and `ADMIN_PASSWORD` as secrets
+   - optional: `DEBATE_BUILD_HOOK_URL`, a Cloudflare deploy hook (**Settings → Builds → Deploy hooks**), so contestant changes rebuild link previews
+4. Deploy, and check `https://<project>.pages.dev/api/debate/tally` returns vote totals.
+5. Under **Custom domains**, add `rhexlimited.com` and `www.rhexlimited.com`. The domain is already on Cloudflare, so the DNS records are updated for you.
+6. The Paystack webhook URL stays `https://rhexlimited.com/api/debate/paystack-webhook`.
+7. Once the live site works on Cloudflare, delete the Netlify project.
+
+`netlify.toml` is kept so the site still deploys on Netlify during the switch. It can be removed afterwards.
+
+### Local preview
+
+```sh
+npx wrangler pages dev
+```
 
 ## SEO
 

@@ -28,11 +28,11 @@
 //   GET    /api/admin/log?limit=&offset=        audit log of admin actions
 //   GET    /api/admin/export/<payments|voters|standings|log>.csv
 //
-// Environment variables (Netlify → Site configuration → Environment variables):
+// Environment variables (Cloudflare Pages → Settings → Variables and Secrets):
 //   ADMIN_PASSWORD             the dashboard password (at least 10 characters)
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, PAYSTACK_SECRET_KEY   already set for voting
 //   VOTE_PRICE_NAIRA           optional, defaults to 100
-//   DEBATE_BUILD_HOOK_URL      optional Netlify build hook; when set, each contestant change
+//   DEBATE_BUILD_HOOK_URL      optional deploy hook URL; when set, each contestant change
 //                              rebuilds the site so WhatsApp/Facebook link previews update too
 import crypto from "node:crypto";
 import {
@@ -188,7 +188,7 @@ export function paystackSummary(d) {
 }
 
 async function verify(reference, env) {
-  if (!env.PAYSTACK_SECRET_KEY) throw userError("PAYSTACK_SECRET_KEY isn't set in Netlify, so Paystack can't be checked.", 503);
+  if (!env.PAYSTACK_SECRET_KEY) throw userError("PAYSTACK_SECRET_KEY isn't set in the hosting settings, so Paystack can't be checked.", 503);
   const r = await paystack(`transaction/verify/${encodeURIComponent(reference)}`, env);
   if (r.status === 404 || (r.body && /not found/i.test(r.body.message || ""))) return null;
   if (!r.ok) throw userError(`Paystack said: ${(r.body && r.body.message) || r.status}`, 502);
@@ -236,7 +236,7 @@ export default async (req, context) => {
   const ip = clientIp(req, context);
 
   if (!env.ADMIN_PASSWORD || String(env.ADMIN_PASSWORD).length < 10) {
-    return fail(503, "The admin password isn't set up yet. Add ADMIN_PASSWORD (10+ characters) in Netlify, then redeploy.");
+    return fail(503, "The admin password isn't set up yet. Add ADMIN_PASSWORD (10+ characters) in the hosting settings, then redeploy.");
   }
   if (!configured(env)) return fail(503, "Supabase isn't configured on this site.");
 
@@ -422,7 +422,7 @@ export default async (req, context) => {
       return json({ payment: data[0] }, 201);
     }
     if (route === "reconcile" && method === "GET") {
-      if (!env.PAYSTACK_SECRET_KEY) return fail(503, "PAYSTACK_SECRET_KEY isn't set in Netlify, so Paystack can't be checked.");
+      if (!env.PAYSTACK_SECRET_KEY) return fail(503, "PAYSTACK_SECRET_KEY isn't set in the hosting settings, so Paystack can't be checked.");
       const days = Math.min(30, Math.max(1, Number(url.searchParams.get("days")) || 3));
       const from = new Date(Date.now() - days * 86400000).toISOString();
       const txs = [];
