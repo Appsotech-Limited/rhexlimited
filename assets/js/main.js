@@ -35,15 +35,6 @@
       syncLabel();
     });
   }
-  if (window.matchMedia) {
-    var mq = window.matchMedia('(prefers-color-scheme: dark)');
-    var onSystem = function (e) {
-      var saved = null;
-      try { saved = localStorage.getItem('rhex-theme'); } catch (err) {}
-      if (!saved) { root.setAttribute('data-theme', e.matches ? 'dark' : 'light'); themeListeners.forEach(function (fn) { fn(); }); }
-    };
-    if (mq.addEventListener) mq.addEventListener('change', onSystem);
-  }
 
   /* ---------- Nav: scrolled state, hide on scroll down, progress ---------- */
   var nav = $('.nav');

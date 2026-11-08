@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,7 +9,7 @@
   <link rel="icon" href="/assets/img/favicon.png">
   <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
   <script>
-    (function () { try { var t = localStorage.getItem("rhex-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+    (function () { var t = "dark"; try { var s = localStorage.getItem("rhex-theme"); if (s === "light" || s === "dark") t = s; } catch (e) {} document.documentElement.setAttribute("data-theme", t); })(); /* dark unless the visitor chose light */
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -292,7 +292,7 @@
     /* ---------- theme ---------- */
     $("theme").addEventListener("click", function () {
       var root = document.documentElement;
-      var cur = root.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      var cur = root.getAttribute("data-theme") || "dark";
       var next = cur === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("rhex-theme", next); } catch (e) {}
