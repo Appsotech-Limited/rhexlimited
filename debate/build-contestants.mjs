@@ -36,6 +36,8 @@ const contestants = live || fallback;
 console.log(live ? "Contestants loaded from Supabase" : "Contestants loaded from data/contestants.js");
 
 const template = fs.readFileSync(path.join(here, "_template/contestant.html"), "utf8");
+const voteTemplate = fs.readFileSync(path.join(here, "_template/vote.html"), "utf8");
+const voteRoot = path.join(here, "vote");
 const outRoot = path.join(here, "contestant");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const price = Number(config.votePrice) || 100;
@@ -63,6 +65,26 @@ for (const c of contestants) {
     .replaceAll("{{NUMBER_JSON}}", JSON.stringify(num).replace(/</g, "\\u003c"));
   fs.mkdirSync(path.join(outRoot, num), { recursive: true });
   fs.writeFileSync(path.join(outRoot, num, "index.html"), html);
+
+  // One-tap vote page, served at /v/<number> (rewrite in netlify.toml).
+  const voteHtml = voteTemplate
+    .replaceAll("{{TITLE}}", esc(`Vote for ${c.name} · Contestant ${num} · The President`))
+    .replaceAll("{{DESCRIPTION}}", esc(`Tap to vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). ₦${price.toLocaleString("en-NG")} per vote.`))
+    .replaceAll("{{URL}}", esc(url))
+    .replaceAll("{{IMAGE}}", esc(image))
+    .replaceAll("{{IMAGE_ALT}}", esc(`${c.name}, Contestant ${num}`))
+    .replaceAll("{{NAME}}", esc(c.name))
+    .replaceAll("{{ROBOTS}}", "noindex, follow")
+    .replaceAll("{{NUMBER_JSON}}", JSON.stringify(num).replace(/</g, "\\u003c"));
+  fs.mkdirSync(path.join(voteRoot, num), { recursive: true });
+  fs.writeFileSync(path.join(voteRoot, num, "index.html"), voteHtml);
+}
+
+// Remove quick-vote pages for contestants no longer in the list.
+if (fs.existsSync(voteRoot)) {
+  for (const dir of fs.readdirSync(voteRoot)) {
+    if (!seen.has(dir)) fs.rmSync(path.join(voteRoot, dir), { recursive: true, force: true });
+  }
 }
 
 // Shown for /debate/contestant/<anything unknown> (see the 404 rule in netlify.toml).
@@ -96,7 +118,8 @@ const stamped = ["data/contestants.js", "assets/debate.js", "assets/debate.css"]
 const hashes = Object.fromEntries(stamped.map((f) => [f,
   crypto.createHash("sha1").update(fs.readFileSync(path.join(here, f))).digest("hex").slice(0, 10)]));
 const pages = [path.join(here, "index.html"), path.join(outRoot, "index.html"),
-  ...[...seen].map((d) => path.join(outRoot, d, "index.html"))];
+  ...[...seen].map((d) => path.join(outRoot, d, "index.html")),
+  ...[...seen].map((d) => path.join(voteRoot, d, "index.html"))];
 for (const page of pages) {
   if (!fs.existsSync(page)) continue;
   let html = fs.readFileSync(page, "utf8");

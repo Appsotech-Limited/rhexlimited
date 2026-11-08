@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/debate.css?v=b6a238f25b">
+  <link rel="stylesheet" href="assets/debate.css?v=6ec43867ce">
 </head>
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
@@ -286,7 +286,9 @@
       });
 
       /* ----- sharing ----- */
-      var shareText = "Please vote for " + c.name + " (Contestant " + c.number + ") in the RHEX Reality Debate Show (The President). Each vote is " + R.naira(price) + ".";
+      // Shares use the short one-tap vote link (/v/<number>), which opens straight to payment.
+      pageUrl = location.origin + "/v/" + encodeURIComponent(c.number);
+      var shareText = "Please vote for " + c.name + " (Contestant " + c.number + ") in the RHEX Reality Debate Show (The President). Tap to vote, " + R.naira(price) + " per vote:";
       $("share-wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText + " " + pageUrl);
       $("share-x").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText) + "&url=" + encodeURIComponent(pageUrl);
       $("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(pageUrl);
