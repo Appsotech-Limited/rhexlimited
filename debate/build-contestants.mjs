@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import crypto from "node:crypto";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const SITE = (process.env.SITE_URL || process.env.URL || "https://rhexlimited.com").replace(/\/$/, "");
@@ -60,4 +61,22 @@ if (fs.existsSync(outRoot)) {
     if (!seen.has(dir)) fs.rmSync(path.join(outRoot, dir), { recursive: true, force: true });
   }
 }
+// Cache-busting: the CDN lets browsers keep .js/.css for hours, so stamp each
+// shared file's URL with a hash of its content. Changing contestants.js then
+// reaches visitors on their next page load.
+const stamped = ["data/contestants.js", "assets/debate.js", "assets/debate.css"];
+const hashes = Object.fromEntries(stamped.map((f) => [f,
+  crypto.createHash("sha1").update(fs.readFileSync(path.join(here, f))).digest("hex").slice(0, 10)]));
+const pages = [path.join(here, "index.html"), path.join(outRoot, "index.html"),
+  ...[...seen].map((d) => path.join(outRoot, d, "index.html"))];
+for (const page of pages) {
+  if (!fs.existsSync(page)) continue;
+  let html = fs.readFileSync(page, "utf8");
+  for (const f of stamped) {
+    const re = new RegExp(`(["'])${f.replace(/[.]/g, "\\.")}(\\?v=[a-f0-9]+)?(["'])`, "g");
+    html = html.replace(re, `$1${f}?v=${hashes[f]}$3`);
+  }
+  fs.writeFileSync(page, html);
+}
+
 console.log(`Built ${contestants.length} contestant page(s) for ${SITE}`);
