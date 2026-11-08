@@ -47,7 +47,7 @@ for (const c of contestants) {
   if (seen.has(num)) throw new Error(`Duplicate contestant number: ${num}`);
   seen.add(num);
 
-  const url = `${SITE}/debate/contestant/${num}`;
+  const url = `${SITE}/debate/contestant/${num}/`;
   const pic = c.poster || c.photo;
   const image = !pic ? `${SITE}/assets/img/rhex-logo.png`
     : /^https?:\/\//.test(pic) ? pic
@@ -57,6 +57,9 @@ for (const c of contestants) {
     .replaceAll("{{DESCRIPTION}}", esc(`Vote for ${c.name} (Contestant ${num}) in the RHEX Reality Debate Show (The President). Each vote is ₦${price.toLocaleString("en-NG")}.`))
     .replaceAll("{{URL}}", esc(url))
     .replaceAll("{{IMAGE}}", esc(image))
+    .replaceAll("{{IMAGE_ALT}}", esc(`${c.name}, Contestant ${num}`))
+    .replaceAll("{{NAME}}", esc(c.name))
+    .replaceAll("{{ROBOTS}}", "index, follow, max-image-preview:large")
     .replaceAll("{{NUMBER_JSON}}", JSON.stringify(num).replace(/</g, "\\u003c"));
   fs.mkdirSync(path.join(outRoot, num), { recursive: true });
   fs.writeFileSync(path.join(outRoot, num, "index.html"), html);
@@ -68,7 +71,10 @@ const generic = template
   .replaceAll("{{DESCRIPTION}}", "Vote in the RHEX Reality Debate Show (The President), organised by Royal Home of Excellence.")
   .replaceAll("{{URL}}", `${SITE}/debate/`)
   .replaceAll("{{IMAGE}}", `${SITE}/assets/img/rhex-logo.png`)
-    // null: the page reads the number from the address, so a contestant added in
+  .replaceAll("{{IMAGE_ALT}}", "RHEX crest")
+  .replaceAll("{{NAME}}", "")
+  .replaceAll("{{ROBOTS}}", "noindex, follow")
+  // null: the page reads the number from the address, so a contestant added in
   // /admin/ works straight away, before the next deploy builds their own page.
   .replaceAll("{{NUMBER_JSON}}", "null");
 fs.mkdirSync(path.join(outRoot, "_unknown"), { recursive: true });
@@ -100,5 +106,13 @@ for (const page of pages) {
   }
   fs.writeFileSync(page, html);
 }
+
+// sitemap.xml at the site root, listing the main pages and every contestant page.
+const today = new Date().toISOString().slice(0, 10);
+const urls = ["/", "/debate/", "/debate/contestant/", ...contestants.map((c) => `/debate/contestant/${String(c.number).trim()}/`)];
+fs.writeFileSync(path.join(here, "..", "sitemap.xml"),
+  '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  urls.map((u) => `  <url><loc>${esc(SITE + u)}</loc><lastmod>${today}</lastmod></url>`).join("\n") +
+  "\n</urlset>\n");
 
 console.log(`Built ${contestants.length} contestant page(s) for ${SITE}`);
