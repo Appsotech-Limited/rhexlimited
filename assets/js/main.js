@@ -4,6 +4,8 @@
 
   var root = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Phones and small tablets get a lighter animation budget (fewer embers, 30fps, no glow sprites).
+  var lite = window.matchMedia('(max-width: 767px), (pointer: coarse)').matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
@@ -45,12 +47,10 @@
 
   /* ---------- Nav: scrolled state, hide on scroll down, progress ---------- */
   var nav = $('.nav');
-  var lastY = 0, ticking = false;
+  var ticking = false; // the bar stays fixed at the top at all times
   function onScroll() {
     var y = window.scrollY;
     nav.classList.toggle('is-scrolled', y > 40);
-    nav.classList.toggle('is-hidden', y > 400 && y > lastY && !nav.classList.contains('menu-open'));
-    lastY = y;
     var h = document.documentElement.scrollHeight - window.innerHeight;
     root.style.setProperty('--progress', h > 0 ? (y / h).toFixed(4) : 0);
     // subtle hero parallax
@@ -66,17 +66,20 @@
 
   /* ---------- Mobile menu ---------- */
   var burger = $('.nav__burger'), menu = $('#mobile-menu');
-  function closeMenu() { nav.classList.remove('menu-open'); menu.hidden = true; burger.setAttribute('aria-expanded', 'false'); burger.setAttribute('aria-label', 'Open menu'); }
+  function setMenu(open) {
+    menu.hidden = !open;
+    nav.classList.toggle('menu-open', open);
+    root.classList.toggle('menu-locked', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    var label = $('.nav__burger-label', burger); if (label) label.textContent = open ? 'Close' : 'Menu';
+  }
+  function closeMenu() { if (menu && !menu.hidden) setMenu(false); }
   if (burger && menu) {
-    burger.addEventListener('click', function () {
-      var open = menu.hidden;
-      menu.hidden = !open;
-      nav.classList.toggle('menu-open', open);
-      burger.setAttribute('aria-expanded', String(open));
-      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    });
+    burger.addEventListener('click', function () { setMenu(menu.hidden); });
     $$('a', menu).forEach(function (a) { a.addEventListener('click', closeMenu); });
-    window.addEventListener('resize', function () { if (window.innerWidth >= 1080) closeMenu(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) { closeMenu(); burger.focus(); } });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 1024) closeMenu(); });
   }
 
   /* ---------- Active nav link ---------- */
@@ -168,6 +171,14 @@
     $('.lightbox__nav--prev').addEventListener('click', function () { show(current - 1); });
     $('.lightbox__nav--next').addEventListener('click', function () { show(current + 1); });
     lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+    // Swipe left/right between photos, swipe down to close
+    var tx = 0, ty = 0;
+    lb.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(current + (dx < 0 ? 1 : -1));
+      else if (dy > 90 && Math.abs(dy) > Math.abs(dx)) closeLb();
+    }, { passive: true });
     document.addEventListener('keydown', function (e) {
       if (lb.hidden) return;
       if (e.key === 'Escape') closeLb();
@@ -203,7 +214,11 @@
     this.palette();
     this.resize();
     var self = this;
-    window.addEventListener('resize', function () { self.resize(); });
+    // Mobile browsers fire resize when the address bar shows or hides; only rebuild on a real size change.
+    window.addEventListener('resize', function () {
+      var r = canvas.getBoundingClientRect();
+      if (Math.abs(r.width - self.w) > 1 || Math.abs(r.height - self.h) > 120) self.resize();
+    });
     var host = canvas.parentElement;
     host.addEventListener('pointermove', function (e) { var r = canvas.getBoundingClientRect(); self.mouse.x = e.clientX - r.left; self.mouse.y = e.clientY - r.top; });
     host.addEventListener('pointerleave', function () { self.mouse.x = self.mouse.y = -9999; });
@@ -219,12 +234,12 @@
     this.lineColor = dark ? '212,175,55' : '249,160,27';
   };
   Particles.prototype.resize = function () {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2), r = this.c.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2), r = this.c.getBoundingClientRect();
     this.w = r.width; this.h = r.height; this.c.width = r.width * dpr; this.c.height = r.height * dpr;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     var density = this.mode === 'hero' ? 9000 : 16000;
     var n = Math.round(Math.min(this.mode === 'hero' ? 130 : 70, (this.w * this.h) / density));
-    if (this.w < 600) n = Math.round(n * 0.6);
+    if (lite) n = Math.round(n * (this.w < 600 ? 0.5 : 0.65));
     this.pts = [];
     for (var i = 0; i < n; i++) this.pts.push(this.spawn(true));
     if (reduceMotion) this.draw();
@@ -246,21 +261,23 @@
     if (this.running || reduceMotion) return;
     this.running = true;
     var self = this;
+    var skip = false;
     (function loop() {
       if (!self.visible || document.hidden) { self.running = false; return; }
-      self.step(); self.draw();
+      // On lite devices draw every other frame (about 30fps); motion is slow enough that it looks the same.
+      if (!lite || (skip = !skip)) { self.step(); self.draw(); }
       requestAnimationFrame(loop);
     })();
   };
   Particles.prototype.step = function () {
-    var m = this.mouse;
+    var m = this.mouse, speed = lite ? 2 : 1;
     for (var i = 0; i < this.pts.length; i++) {
       var p = this.pts[i];
-      p.tw += 0.03;
+      p.tw += 0.03 * speed;
       var dx = m.x - p.x, dy = m.y - p.y, d2 = dx * dx + dy * dy;
       if (d2 < 22000) { var f = (1 - d2 / 22000) * 0.04; p.vx += dx * f * 0.02; p.vy += dy * f * 0.02; }
       p.vx *= 0.985; p.vx += (Math.random() - 0.5) * 0.02;
-      p.x += p.vx; p.y += p.vy;
+      p.x += p.vx * speed; p.y += p.vy * speed;
       if (p.y < -10 || p.x < -20 || p.x > this.w + 20) { this.pts[i] = this.spawn(false); this.pts[i].c = this.colors[(Math.random() * this.colors.length) | 0]; }
     }
   };
@@ -281,7 +298,7 @@
     // embers
     for (var k = 0; k < pts.length; k++) {
       var p = pts[k], alpha = p.a * (0.6 + 0.4 * Math.sin(p.tw));
-      if (p.r > 1.8) {
+      if (p.r > 1.8 && !lite) {
         var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
         g.addColorStop(0, 'rgba(' + p.c + ',' + alpha + ')'); g.addColorStop(1, 'rgba(' + p.c + ',0)');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2); ctx.fill();
