@@ -10,7 +10,7 @@
   /* ---------- Theme (same key as the main site) ---------- */
   function currentTheme() {
     return root.getAttribute("data-theme") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      "dark"; // dark is the default
   }
   RHEX.isDark = function () { return currentTheme() === "dark"; };
   document.addEventListener("click", function (e) {
