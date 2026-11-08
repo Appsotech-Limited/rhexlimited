@@ -307,6 +307,111 @@
     loop();
   }
 
+  /* ---------- Shareable QR card ----------
+     RHEX.qrCard(contestant, voteUrl, price) resolves to a 1080×1350 canvas: name,
+     photo and a QR code that opens the one-tap vote link. The QR library
+     (assets/qrcode.js, MIT, Kazuhiko Arase) only loads when someone asks for a card. */
+  var qrLib = null;
+  function loadQR() {
+    if (window.qrcode) return Promise.resolve(window.qrcode);
+    if (!qrLib) qrLib = new Promise(function (ok, fail) {
+      var s = document.createElement("script");
+      s.src = "assets/qrcode.js";
+      s.onload = function () { window.qrcode ? ok(window.qrcode) : fail(new Error("QR library missing")); };
+      s.onerror = function () { qrLib = null; fail(new Error("QR library failed to load")); };
+      document.head.appendChild(s);
+    });
+    return qrLib;
+  }
+  function loadImg(src) {
+    return new Promise(function (ok) {
+      if (!src) return ok(null);
+      var im = new Image();
+      if (/^https?:/.test(src) && src.indexOf(location.origin) !== 0) im.crossOrigin = "anonymous";
+      im.onload = function () { ok(im); };
+      im.onerror = function () { ok(null); };
+      im.src = src;
+    });
+  }
+  function rrect(g, x, y, w, h, r) {
+    g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  }
+  function fitText(g, text, font, size, maxW) {
+    do { g.font = font.replace("{s}", size); size -= 2; } while (g.measureText(text).width > maxW && size > 20);
+  }
+  RHEX.qrCard = function (c, url, price) {
+    var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    return Promise.all([loadQR(), loadImg(c.photo), fontsReady]).then(function (r) {
+      var qrcode = r[0], photo = r[1];
+      var W = 1080, H = 1350, cv = document.createElement("canvas");
+      cv.width = W; cv.height = H;
+      var g = cv.getContext("2d");
+      var display = '700 {s}px "Cormorant Garamond", Georgia, serif';
+      var body = '600 {s}px Montserrat, "Segoe UI", sans-serif';
+
+      // background: night sky with a warm glow and a few stars
+      var bg = g.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, "#1b1c24"); bg.addColorStop(1, "#0b0c10");
+      g.fillStyle = bg; g.fillRect(0, 0, W, H);
+      var glow = g.createRadialGradient(W / 2, 330, 40, W / 2, 330, 620);
+      glow.addColorStop(0, "rgba(249,160,27,.28)"); glow.addColorStop(1, "rgba(249,160,27,0)");
+      g.fillStyle = glow; g.fillRect(0, 0, W, H);
+      var seed = 7; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+      for (var i = 0; i < 90; i++) {
+        g.globalAlpha = .25 + rnd() * .6; g.fillStyle = rnd() > .7 ? "#E9CF7A" : "#ffffff";
+        g.beginPath(); g.arc(rnd() * W, rnd() * H, .8 + rnd() * 2.2, 0, 6.283); g.fill();
+      }
+      g.globalAlpha = 1;
+      g.strokeStyle = "rgba(212,175,55,.55)"; g.lineWidth = 3; rrect(g, 28, 28, W - 56, H - 56, 36); g.stroke();
+
+      g.textAlign = "center"; g.textBaseline = "alphabetic";
+      g.fillStyle = "#E9CF7A"; g.font = body.replace("{s}", 26);
+      g.letterSpacing = "8px";
+      g.fillText("RHEX REALITY DEBATE SHOW", W / 2, 112);
+      g.letterSpacing = "0px";
+      var gold = g.createLinearGradient(W / 2 - 300, 0, W / 2 + 300, 0);
+      gold.addColorStop(0, "#B8860B"); gold.addColorStop(.5, "#F5DE8C"); gold.addColorStop(1, "#D4AF37");
+      g.fillStyle = gold; g.font = display.replace("{s}", 84);
+      g.fillText("THE PRESIDENT", W / 2, 196);
+
+      // photo
+      var pr = 120, py = 350;
+      g.save(); g.beginPath(); g.arc(W / 2, py, pr, 0, 6.283); g.clip();
+      if (photo) {
+        var s = Math.max(pr * 2 / photo.width, pr * 2 / photo.height), iw = photo.width * s, ih = photo.height * s;
+        g.drawImage(photo, W / 2 - iw / 2, py - pr, iw, ih); // keep the top of portrait photos (faces)
+      } else {
+        g.fillStyle = "#2F323E"; g.fillRect(W / 2 - pr, py - pr, pr * 2, pr * 2);
+        g.fillStyle = "#E9CF7A"; g.font = display.replace("{s}", 110); g.textBaseline = "middle";
+        g.fillText(String(c.name || "?").trim().charAt(0).toUpperCase(), W / 2, py + 6); g.textBaseline = "alphabetic";
+      }
+      g.restore();
+      g.strokeStyle = "#D4AF37"; g.lineWidth = 6; g.beginPath(); g.arc(W / 2, py, pr + 4, 0, 6.283); g.stroke();
+
+      g.fillStyle = "#ffffff"; fitText(g, c.name, display, 76, W - 160);
+      g.fillText(c.name, W / 2, 556);
+      g.fillStyle = "#E9CF7A"; g.font = body.replace("{s}", 30);
+      g.fillText("Contestant No. " + c.number, W / 2, 606);
+
+      // QR code on a white tile
+      var qr = qrcode(0, "M"); qr.addData(url); qr.make();
+      var n = qr.getModuleCount(), tile = 470, tx = (W - tile) / 2, ty = 650, quiet = 26;
+      var cell = Math.floor((tile - quiet * 2) / n), off = (tile - cell * n) / 2;
+      g.fillStyle = "#ffffff"; rrect(g, tx, ty, tile, tile, 28); g.fill();
+      g.fillStyle = "#111218";
+      for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) if (qr.isDark(y, x)) g.fillRect(tx + off + x * cell, ty + off + y * cell, cell, cell);
+
+      g.fillStyle = gold; g.font = body.replace("{s}", 40);
+      g.letterSpacing = "6px";
+      g.fillText("SCAN TO VOTE", W / 2, 1200);
+      g.letterSpacing = "0px";
+      g.fillStyle = "rgba(255,255,255,.82)"; g.font = body.replace("{s}", 28);
+      g.fillText(RHEX.naira(price) + " per vote  ·  " + url.replace(/^https?:\/\//, ""), W / 2, 1254);
+      return cv;
+    });
+  };
+
   document.addEventListener("DOMContentLoaded", function () {
     initSky();
     initReveal();
