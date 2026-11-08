@@ -163,6 +163,55 @@
 
     .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); opacity: 0; transition: .25s; background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; z-index: 99; pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%); }
+
+    /* v2: tabs on phones scroll sideways */
+    .tabs { margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+    .stats.five { grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 900px) { .stats.five { grid-template-columns: repeat(5, 1fr); } }
+    .banner { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 12px 16px; margin-bottom: 16px; font-size: 14px; }
+    .banner b { font-weight: 700; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--ok); margin-right: 6px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 20%, transparent); }
+    .dot.off { background: var(--danger); box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 20%, transparent); }
+    .pill.ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+    .pill.warn { background: color-mix(in srgb, var(--orange) 18%, transparent); color: var(--orange-deep); }
+    .num .round { display: block; font-size: 12px; color: var(--accent); font-weight: 600; }
+    .ptable tbody tr { cursor: pointer; }
+    .ptable tbody tr:hover { background: color-mix(in srgb, var(--orange) 6%, transparent); }
+    .ptable tr.voided td { opacity: .55; text-decoration: line-through; }
+    .ptable tr.voided td:last-child { text-decoration: none; }
+    .flags { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 4px; }
+    .flags .pill { margin: 0; }
+    .tool { padding: 16px; margin-bottom: 16px; }
+    .tool h3 { margin: 0 0 4px; font-size: 16px; }
+    .tool p { margin: 0 0 12px; }
+    .inline { display: flex; gap: 8px; flex-wrap: wrap; }
+    .inline > input, .inline > select { flex: 1 1 200px; }
+    .result { margin-top: 14px; }
+    .kv { display: grid; grid-template-columns: minmax(110px, 34%) 1fr; gap: 6px 12px; font-size: 14px; margin: 0; }
+    .kv dt { color: var(--text-soft); }
+    .kv dd { margin: 0; overflow-wrap: anywhere; }
+    .notes { margin: 12px 0; padding: 0; list-style: none; }
+    .notes li { padding: 8px 12px; border-radius: 10px; background: var(--bg-2); margin-bottom: 6px; font-size: 14px; }
+    .two { display: grid; gap: 16px; }
+    @media (min-width: 900px) { .two { grid-template-columns: 1fr 1fr; } .two > .tool { margin-bottom: 0; } }
+    .switch { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+    .switch:first-of-type { border-top: 0; }
+    .switch span b { display: block; font-weight: 600; }
+    .switch span small { color: var(--text-soft); font-size: 13px; }
+    .switch input[type=checkbox] { appearance: none; -webkit-appearance: none; width: 50px; height: 30px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); position: relative; cursor: pointer; flex: none; transition: .2s; }
+    .switch input[type=checkbox]::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--text-soft); transition: .2s; }
+    .switch input[type=checkbox]:checked { background: linear-gradient(135deg, var(--orange), var(--orange-deep)); border-color: transparent; }
+    .switch input[type=checkbox]:checked::after { left: 23px; background: #fff; }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; flex: none; }
+    .seg button { border: 0; background: transparent; padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .seg button[aria-pressed=true] { background: var(--text); color: var(--bg); }
+    .list { list-style: none; margin: 0; padding: 0; }
+    .list li { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 14px; }
+    .list li:first-child { border-top: 0; }
+    .list li small { color: var(--text-soft); display: block; }
+    .exports { display: flex; flex-wrap: wrap; gap: 8px; }
+    .voter b { font-weight: 600; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -198,49 +247,142 @@
         <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
         <button role="tab" data-tab="contestants" aria-selected="false">Contestants</button>
         <button role="tab" data-tab="payments" aria-selected="false">Payments</button>
+        <button role="tab" data-tab="voters" aria-selected="false">Voters</button>
+        <button role="tab" data-tab="show" aria-selected="false">Show controls</button>
+        <button role="tab" data-tab="activity" aria-selected="false">Activity</button>
       </nav>
 
+      <!-- Overview -->
       <section class="panel" id="tab-overview">
         <div class="panel-head"><h2>Live <span class="gold">votes</span></h2><span class="muted" id="updated"></span></div>
-        <div class="stats">
+        <div class="card banner" id="status-banner"></div>
+        <div class="stats five">
           <div class="card stat"><small>Total votes</small><b id="s-votes">–</b></div>
+          <div class="card stat"><small id="s-round-label">This round</small><b id="s-round">–</b></div>
           <div class="card stat"><small>Money received</small><b id="s-amount">–</b></div>
           <div class="card stat"><small>Payments</small><b id="s-payments">–</b></div>
-          <div class="card stat"><small>Contestants</small><b id="s-count">–</b></div>
+          <div class="card stat"><small>In the race</small><b id="s-count">–</b></div>
         </div>
         <div class="card"><ol class="board" id="board"></ol></div>
         <p class="muted" id="orphans" hidden></p>
       </section>
 
+      <!-- Contestants -->
       <section class="panel" id="tab-contestants" hidden>
         <div class="panel-head"><h2>Contestants</h2><button class="btn btn-primary" type="button" id="add">+ Add contestant</button></div>
         <div class="tools"><input type="search" id="c-q" placeholder="Search by name or number" aria-label="Search contestants"></div>
         <div class="cgrid" id="clist"></div>
       </section>
 
+      <!-- Payments -->
       <section class="panel" id="tab-payments" hidden>
-        <div class="panel-head"><h2>Payments</h2><a class="btn" id="csv" href="/api/admin/payments.csv">Download CSV</a></div>
-        <div class="tools">
-          <input type="search" id="p-q" placeholder="Search email or reference" aria-label="Search payments">
-          <select id="p-c" aria-label="Filter by contestant"><option value="">All contestants</option></select>
+        <div class="panel-head"><h2>Payments</h2><a class="btn" id="csv" href="/api/admin/export/payments.csv">Download CSV</a></div>
+        <div class="two" style="margin-bottom:16px">
+          <div class="card tool">
+            <h3>Check a payment with Paystack</h3>
+            <p class="muted">Paste a reference from a voter's receipt. You'll see Paystack's live status, and you can credit the votes if the payment was missed.</p>
+            <form class="inline" id="rq-form"><input type="text" id="rq-ref" placeholder="RHEX-PRES-1120-…" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Paystack reference"><button class="btn btn-primary" type="submit">Check now</button></form>
+          </div>
+          <div class="card tool">
+            <h3>Find missed payments</h3>
+            <p class="muted">Compares every successful Paystack payment with the vote records and lists any that were never counted.</p>
+            <div class="inline"><select id="rc-days" aria-label="How far back"><option value="1">Last 24 hours</option><option value="3" selected>Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button class="btn btn-primary" type="button" id="rc-go">Scan Paystack</button></div>
+            <div class="result" id="rc-out"></div>
+          </div>
         </div>
+        <div class="tools">
+          <input type="search" id="p-q" placeholder="Search name, email, phone or reference" aria-label="Search payments">
+          <select id="p-c" aria-label="Filter by contestant"><option value="">All contestants</option></select>
+          <select id="p-f" aria-label="Show"><option value="">All payments</option><option value="flagged">Flagged for review</option><option value="requery">Credited by requery</option><option value="voided">Removed from count</option></select>
+        </div>
+        <p class="muted" id="p-email-filter" hidden></p>
         <div class="card">
           <table class="ptable">
-            <thead><tr><th>Paid</th><th>Contestant</th><th class="r">Votes</th><th class="r">Amount</th><th>Email</th><th>Reference</th></tr></thead>
+            <thead><tr><th>Paid</th><th>Contestant</th><th class="r">Votes</th><th class="r">Amount</th><th>Voter</th><th>Reference</th></tr></thead>
             <tbody id="plist"></tbody>
           </table>
           <div class="pager"><button class="btn btn-sm" id="prev" type="button">← Newer</button><span class="muted" id="prange"></span><button class="btn btn-sm" id="next" type="button">Older →</button></div>
         </div>
-        <p class="hint">Only payments confirmed by Paystack appear here. Each one is also in your Paystack dashboard.</p>
+        <p class="hint">Tap a payment for full details. Only payments confirmed by Paystack are counted.</p>
+      </section>
+
+      <!-- Voters -->
+      <section class="panel" id="tab-voters" hidden>
+        <div class="panel-head"><h2>Voters</h2><a class="btn" href="/api/admin/export/voters.csv">Download CSV</a></div>
+        <div class="tools">
+          <input type="search" id="v-q" placeholder="Search name, email or phone" aria-label="Search voters">
+          <select id="v-sort" aria-label="Sort"><option value="votes">Most votes first</option><option value="recent">Most recent first</option></select>
+        </div>
+        <div class="card">
+          <table class="ptable">
+            <thead><tr><th>Voter</th><th class="r">Votes</th><th class="r">Spent</th><th class="r">Payments</th><th>Voted for</th><th>Last vote</th></tr></thead>
+            <tbody id="vlist"></tbody>
+          </table>
+          <div class="pager"><button class="btn btn-sm" id="vprev" type="button">← Back</button><span class="muted" id="vrange"></span><button class="btn btn-sm" id="vnext" type="button">More →</button></div>
+        </div>
+        <p class="hint">One row per email address. Tap a voter to see their payments.</p>
+      </section>
+
+      <!-- Show controls -->
+      <section class="panel" id="tab-show" hidden>
+        <div class="panel-head"><h2>Show <span class="gold">controls</span></h2></div>
+        <div class="two">
+          <div class="card tool">
+            <h3>Voting</h3>
+            <label class="switch"><span><b>Voting is open</b><small>Turn off to stop new votes on every contestant page.</small></span><input type="checkbox" id="set-open"></label>
+            <label class="field" style="margin:4px 0 0"><span>Message when voting is closed</span><input type="text" id="set-msg" maxlength="300" placeholder="Voting is closed for now. Please check back for the next round."></label>
+            <div class="inline" style="justify-content:flex-end"><button class="btn btn-sm" type="button" id="set-msg-save">Save message</button></div>
+            <label class="switch"><span><b>Hide vote counts</b><small>The public leaderboard and counts disappear. Votes are still recorded.</small></span><input type="checkbox" id="set-hide"></label>
+            <div class="switch"><span><b>Public leaderboard shows</b><small>All-time votes, or only votes in the current round.</small></span>
+              <span class="seg" id="set-scope"><button type="button" data-v="total">All time</button><button type="button" data-v="round">This round</button></span></div>
+          </div>
+          <div class="card tool">
+            <h3>Rounds</h3>
+            <p class="muted" id="round-now">No round started yet.</p>
+            <form class="inline" id="round-form"><input type="text" id="round-name" maxlength="80" placeholder="e.g. Round 2, Semi-final, Grand finale" aria-label="New round name"><button class="btn btn-primary" type="submit">Start round</button></form>
+            <p class="hint">Starting a round counts "this round" votes from now on. All-time totals never reset. Evict contestants from the Contestants tab.</p>
+          </div>
+        </div>
+        <div class="two" style="margin-top:16px">
+          <div class="card tool">
+            <h3>Manual vote adjustments</h3>
+            <p class="muted">Add votes (for example, a cash or bank transfer vote) or remove them (for example, a refund). Every adjustment needs a reason and is logged.</p>
+            <form id="adj-form">
+              <div class="inline" style="margin-bottom:8px"><select id="adj-c" aria-label="Contestant" required></select><input type="number" id="adj-v" placeholder="+10 or -5" step="1" aria-label="Votes" required style="flex:0 1 130px"></div>
+              <div class="inline"><input type="text" id="adj-r" maxlength="300" placeholder="Reason" aria-label="Reason" required><button class="btn btn-primary" type="submit">Apply</button></div>
+              <p class="err" id="adj-err"></p>
+            </form>
+            <ul class="list" id="adj-list"></ul>
+          </div>
+          <div class="card tool">
+            <h3>Downloads</h3>
+            <p class="muted">Spreadsheets (CSV) that open in Excel or Google Sheets.</p>
+            <div class="exports">
+              <a class="btn btn-sm" href="/api/admin/export/standings.csv">Standings</a>
+              <a class="btn btn-sm" href="/api/admin/export/payments.csv">All payments</a>
+              <a class="btn btn-sm" href="/api/admin/export/voters.csv">Voters</a>
+              <a class="btn btn-sm" href="/api/admin/export/log.csv">Activity log</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity -->
+      <section class="panel" id="tab-activity" hidden>
+        <div class="panel-head"><h2>Activity</h2><a class="btn" href="/api/admin/export/log.csv">Download CSV</a></div>
+        <div class="card"><ul class="list" id="loglist"></ul>
+          <div class="pager"><button class="btn btn-sm" id="lprev" type="button">← Newer</button><span class="muted" id="lrange"></span><button class="btn btn-sm" id="lnext" type="button">Older →</button></div></div>
+        <p class="hint">Every sign-in and admin change, newest first.</p>
       </section>
     </div>
   </main>
 
+  <!-- Contestant editor -->
   <dialog id="dlg">
     <form class="card" id="edit-form" method="dialog">
       <h2 id="dlg-title">Add contestant</h2>
       <label class="field"><span>Contestant number</span><input type="text" id="f-number" inputmode="numeric" maxlength="20" pattern="[A-Za-z0-9-]{1,20}" required>
-        <p class="hint" id="f-number-hint">Used in their voting link: rhexlimited.com/debate/contestant/<b>number</b>. It can't be changed later.</p></label>
+        <p class="hint" id="f-number-hint">Used in their voting link: rhexlimited.com/v/<b>number</b>. It can't be changed later.</p></label>
       <label class="field"><span>Full name</span><input type="text" id="f-name" maxlength="120" required></label>
       <div class="pics">
         <div class="pic"><span>Photo (4:5)</span><div class="prev" id="pv-photo">No photo</div>
@@ -259,6 +401,26 @@
     </form>
   </dialog>
 
+  <!-- Payment details / requery -->
+  <dialog id="pdlg">
+    <div class="card">
+      <h2 id="pd-title">Payment</h2>
+      <div id="pd-body"></div>
+      <div class="dlg-acts" id="pd-acts"></div>
+    </div>
+  </dialog>
+
+  <!-- Adjust one contestant -->
+  <dialog id="adlg">
+    <form class="card" id="ad-form">
+      <h2 id="ad-title">Adjust votes</h2>
+      <label class="field"><span>Votes to add (use a minus to remove)</span><input type="number" id="ad-v" step="1" required></label>
+      <label class="field"><span>Reason</span><input type="text" id="ad-r" maxlength="300" required placeholder="e.g. Bank transfer vote, receipt #123"></label>
+      <p class="err" id="ad-err"></p>
+      <div class="dlg-acts"><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit">Apply</button></div>
+    </form>
+  </dialog>
+
   <div class="toast" id="toast" role="status"></div>
 
   <script>
@@ -266,14 +428,19 @@
     "use strict";
     var $ = function (id) { return document.getElementById(id); };
     var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
-    var naira = function (kobo) { return "₦" + (Number(kobo || 0) / 100).toLocaleString("en-NG", { maximumFractionDigits: 0 }); };
+    var naira = function (kobo) { return "₦" + (Number(kobo || 0) / 100).toLocaleString("en-NG", { maximumFractionDigits: 2 }); };
     var nf = function (n) { return Number(n || 0).toLocaleString("en-NG"); };
     var initials = function (n) { return String(n || "").trim().split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join(""); };
-    // Photos are either full URLs (uploaded here) or site paths under /debate/.
     var src = function (p) { return !p ? "" : /^https?:\/\//.test(p) ? p : "/debate/" + String(p).replace(/^\/?(debate\/)?/, ""); };
     var thumb = function (c) { return c.photo ? '<img class="thumb" src="' + esc(src(c.photo)) + '" alt="" loading="lazy">' : '<span class="thumb">' + esc(initials(c.name)) + "</span>"; };
+    var when = function (iso) { if (!iso) return "–"; var d = new Date(iso); return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); };
+    var FLAG_LABELS = { odd_amount: "Odd amount", voting_closed: "Paid while voting closed", eliminated: "Contestant evicted", unknown_contestant: "Unknown contestant", hidden_contestant: "Contestant hidden", rapid: "Many payments fast" };
+    var flagPills = function (f) { return (f || []).map(function (x) { return '<span class="pill warn">' + esc(FLAG_LABELS[x] || x) + "</span>"; }).join(""); };
 
-    function toast(msg) { var t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove("show"); }, 2600); }
+    function toast(msg) { var t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove("show"); }, 3000); }
+    function openDlg(d) { if (d.showModal) d.showModal(); else d.setAttribute("open", ""); }
+    function closeDlg(d) { if (d.close) d.close(); else d.removeAttribute("open"); }
+    document.querySelectorAll("[data-close]").forEach(function (b) { b.addEventListener("click", function () { closeDlg(b.closest("dialog")); }); });
 
     function api(path, opts) {
       opts = opts || {};
@@ -288,12 +455,12 @@
         });
       });
     }
+    function busy(btn, p) { btn.disabled = true; return p.then(function (x) { btn.disabled = false; return x; }, function (e) { btn.disabled = false; throw e; }); }
 
     /* ---------- theme ---------- */
     $("theme").addEventListener("click", function () {
       var root = document.documentElement;
-      var cur = root.getAttribute("data-theme") || "dark";
-      var next = cur === "dark" ? "light" : "dark";
+      var next = (root.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("rhex-theme", next); } catch (e) {}
     });
@@ -313,34 +480,37 @@
     }
     $("login-form").addEventListener("submit", function (e) {
       e.preventDefault();
-      var btn = e.target.querySelector("button"); btn.disabled = true; $("login-err").textContent = "";
-      api("login", { method: "POST", body: { password: $("password").value } })
+      $("login-err").textContent = "";
+      busy(e.target.querySelector("button"), api("login", { method: "POST", body: { password: $("password").value } }))
         .then(function () { $("password").value = ""; showApp(); })
-        .catch(function (err) { $("login-err").textContent = err.message; })
-        .then(function () { btn.disabled = false; });
+        .catch(function (err) { $("login-err").textContent = err.message; });
     });
     $("logout").addEventListener("click", function () { api("logout", { method: "POST" }).catch(function () {}).then(showLogin); });
 
     /* ---------- tabs ---------- */
     var current = "overview";
-    document.querySelectorAll("[data-tab]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        current = b.dataset.tab;
-        document.querySelectorAll("[data-tab]").forEach(function (x) { x.setAttribute("aria-selected", String(x === b)); });
-        ["overview", "contestants", "payments"].forEach(function (t) { $("tab-" + t).hidden = t !== current; });
-        if (current === "payments") loadPayments(0);
-        else loadContestants();
-      });
-    });
+    var TABS = ["overview", "contestants", "payments", "voters", "show", "activity"];
+    function go(tab) {
+      current = tab;
+      document.querySelectorAll("[data-tab]").forEach(function (x) { x.setAttribute("aria-selected", String(x.dataset.tab === tab)); });
+      TABS.forEach(function (t) { $("tab-" + t).hidden = t !== tab; });
+      if (tab === "payments") loadPayments(0);
+      else if (tab === "voters") loadVoters(0);
+      else if (tab === "activity") loadLog(0);
+      else if (tab === "show") { loadContestants(); loadAdjustments(); }
+      else loadContestants();
+      window.scrollTo(0, 0);
+    }
+    document.querySelectorAll("[data-tab]").forEach(function (b) { b.addEventListener("click", function () { go(b.dataset.tab); }); });
 
     /* ---------- contestants + overview ---------- */
-    var list = [], orphans = [];
+    var list = [], orphans = [], settings = {}, hasPaystack = true;
     function loadContestants() {
       return api("contestants").then(function (j) {
-        list = j.contestants || []; orphans = j.orphans || [];
-        renderOverview(); renderContestants(); fillFilter();
+        list = j.contestants || []; orphans = j.orphans || []; settings = j.settings || {}; hasPaystack = j.paystack !== false;
+        renderOverview(); renderContestants(); fillPickers(); renderSettings();
         $("updated").textContent = "Updated " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      }).catch(function (err) { if ($("app").hidden === false) toast(err.message); });
+      }).catch(function (err) { if (!$("app").hidden) toast(err.message); });
     }
     function renderOverview() {
       var all = list.concat(orphans);
@@ -348,55 +518,77 @@
       $("s-votes").textContent = nf(sum("votes"));
       $("s-amount").textContent = naira(sum("amountKobo"));
       $("s-payments").textContent = nf(sum("payments"));
-      var shown = list.filter(function (c) { return c.active; }).length;
-      $("s-count").textContent = shown + (shown !== list.length ? " / " + list.length : "");
-      var ranked = list.slice().sort(function (a, b) { return b.votes - a.votes || Number(a.number) - Number(b.number); });
+      var inRace = list.filter(function (c) { return c.active && !c.eliminated; }).length;
+      $("s-count").textContent = inRace + " / " + list.length;
+      $("s-round-label").textContent = settings.round_name || "This round";
+      $("s-round").textContent = settings.round_started_at ? nf(list.reduce(function (s, c) { return s + (Number(c.round) || 0); }, 0)) : "–";
+      $("status-banner").innerHTML =
+        '<span><i class="dot' + (settings.voting_open === false ? " off" : "") + '"></i><b>Voting ' + (settings.voting_open === false ? "closed" : "open") + "</b></span>" +
+        "<span>Leaderboard: <b>" + (settings.tally_hidden ? "hidden" : settings.leaderboard_scope === "round" ? "this round" : "all time") + "</b></span>" +
+        (settings.round_name ? "<span>Round: <b>" + esc(settings.round_name) + "</b> since " + esc(when(settings.round_started_at)) + "</span>" : "") +
+        '<button class="btn btn-sm" type="button" data-goto="show" style="margin-left:auto">Show controls</button>';
+      var ranked = list.slice().sort(function (a, b) { return (a.eliminated - b.eliminated) || b.votes - a.votes || Number(a.number) - Number(b.number); });
       var top = Math.max(1, ranked.length ? ranked[0].votes : 1);
       $("board").innerHTML = ranked.length ? ranked.map(function (c, i) {
-        return '<li><span class="rank">' + (i + 1) + "</span>" + thumb(c) +
-          '<span class="who"><b>' + esc(c.name) + (c.active ? "" : '<span class="pill off">Hidden</span>') + "</b><small>No. " + esc(c.number) + " · " + nf(c.payments) + (c.payments === 1 ? " payment" : " payments") + '</small><span class="bar"><i style="width:' + (c.votes / top * 100).toFixed(1) + '%"></i></span></span>' +
-          '<span class="num">' + nf(c.votes) + "<small>" + naira(c.amountKobo) + "</small></span></li>";
+        return '<li><span class="rank">' + (c.eliminated ? "–" : i + 1) + "</span>" + thumb(c) +
+          '<span class="who"><b>' + esc(c.name) + statusPills(c) + "</b><small>No. " + esc(c.number) + " · " + nf(c.payments) + (c.payments === 1 ? " payment" : " payments") + (c.adjustment ? " · " + (c.adjustment > 0 ? "+" : "") + nf(c.adjustment) + " adjusted" : "") + '</small><span class="bar"><i style="width:' + Math.max(0, c.votes / top * 100).toFixed(1) + '%"></i></span></span>' +
+          '<span class="num">' + nf(c.votes) + "<small>" + naira(c.amountKobo) + "</small>" + (c.round != null ? '<span class="round">' + nf(c.round) + " this round</span>" : "") + "</span></li>";
       }).join("") : '<li class="empty" style="display:block">No contestants yet.</li>';
       $("orphans").hidden = !orphans.length;
       $("orphans").textContent = orphans.length ? "Votes for numbers not in the contestant list: " + orphans.map(function (o) { return "No. " + o.number + " (" + nf(o.votes) + ")"; }).join(", ") : "";
+    }
+    document.addEventListener("click", function (e) { var g = e.target.closest("[data-goto]"); if (g) go(g.dataset.goto); });
+    function statusPills(c) {
+      return (c.eliminated ? '<span class="pill off">Evicted' + (c.eliminated_round ? " · " + esc(c.eliminated_round) : "") + "</span>" : "") +
+        (c.active ? "" : '<span class="pill">Hidden</span>');
     }
     function renderContestants() {
       var term = $("c-q").value.trim().toLowerCase();
       var shown = list.filter(function (c) { return !term || c.name.toLowerCase().indexOf(term) > -1 || String(c.number).toLowerCase().indexOf(term) > -1; });
       $("clist").innerHTML = shown.length ? shown.map(function (c) {
+        var n = esc(c.number);
         return '<div class="card crow">' + thumb(c) + "<div>" +
-          "<h3>" + esc(c.name) + (c.active ? "" : '<span class="pill off">Hidden</span>') + "</h3>" +
-          '<div class="meta">No. ' + esc(c.number) + " · " + nf(c.votes) + (c.votes === 1 ? " vote" : " votes") + "</div>" +
-          '<div class="acts"><button class="btn btn-sm" data-edit="' + esc(c.number) + '">Edit</button>' +
-          '<button class="btn btn-sm" data-toggle="' + esc(c.number) + '">' + (c.active ? "Hide" : "Show") + "</button>" +
-          '<a class="btn btn-sm" href="/debate/contestant/' + encodeURIComponent(c.number) + '" target="_blank" rel="noopener">View</a>' +
-          '<button class="btn btn-sm btn-danger" data-del="' + esc(c.number) + '">Delete</button></div>' +
+          "<h3>" + esc(c.name) + statusPills(c) + "</h3>" +
+          '<div class="meta">No. ' + n + " · " + nf(c.votes) + (c.votes === 1 ? " vote" : " votes") + " · " + naira(c.amountKobo) + "</div>" +
+          '<div class="acts"><button class="btn btn-sm" data-edit="' + n + '">Edit</button>' +
+          '<button class="btn btn-sm" data-elim="' + n + '">' + (c.eliminated ? "Reinstate" : "Evict") + "</button>" +
+          '<button class="btn btn-sm" data-adjust="' + n + '">Adjust votes</button>' +
+          '<button class="btn btn-sm" data-pays="' + n + '">Payments</button>' +
+          '<button class="btn btn-sm" data-toggle="' + n + '">' + (c.active ? "Hide" : "Show") + "</button>" +
+          '<a class="btn btn-sm" href="/v/' + encodeURIComponent(c.number) + '" target="_blank" rel="noopener">View</a>' +
+          '<button class="btn btn-sm btn-danger" data-del="' + n + '">Delete</button></div>' +
           "</div></div>";
       }).join("") : '<div class="empty card" style="grid-column:1/-1">' + (list.length ? "No contestant matches." : "No contestants yet. Add the first one.") + "</div>";
     }
     $("c-q").addEventListener("input", renderContestants);
     var find = function (n) { return list.filter(function (c) { return c.number === n; })[0]; };
+    function update(c, body, msg, btn) {
+      return busy(btn, api("contestants/" + encodeURIComponent(c.number), { method: "PUT", body: body }))
+        .then(function () { toast(msg); return loadContestants(); })
+        .catch(function (err) { toast(err.message); });
+    }
     $("clist").addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return;
-      if (b.dataset.edit) openEditor(find(b.dataset.edit));
-      if (b.dataset.toggle) {
-        var c = find(b.dataset.toggle); b.disabled = true;
-        api("contestants/" + encodeURIComponent(c.number), { method: "PUT", body: { active: !c.active } })
-          .then(function () { toast(c.name + (c.active ? " is now hidden" : " is now showing")); return loadContestants(); })
-          .catch(function (err) { toast(err.message); b.disabled = false; });
+      var c = find(b.dataset.edit || b.dataset.toggle || b.dataset.elim || b.dataset.adjust || b.dataset.pays || b.dataset.del);
+      if (!c) return;
+      if (b.dataset.edit) openEditor(c);
+      if (b.dataset.toggle) update(c, { active: !c.active }, c.name + (c.active ? " is now hidden" : " is now showing"), b);
+      if (b.dataset.elim) {
+        var msg = c.eliminated ? "Reinstate " + c.name + "? Voting for them opens again." : "Evict " + c.name + (settings.round_name ? " in " + settings.round_name : "") + "? Their page stays up with an “evicted” notice and voting for them stops. Their votes are kept.";
+        if (confirm(msg)) update(c, { eliminated: !c.eliminated }, c.name + (c.eliminated ? " reinstated" : " evicted"), b);
       }
+      if (b.dataset.adjust) openAdjust(c);
+      if (b.dataset.pays) { $("p-c").value = c.number; pEmail = ""; go("payments"); }
       if (b.dataset.del) {
-        var d = find(b.dataset.del);
-        var warn = d.votes ? "\n\n" + d.name + " has " + nf(d.votes) + " votes. The payment records are kept, but they won't show on the site. To take them off the site but keep their page data, use Hide instead." : "";
-        if (!confirm("Delete " + d.name + " (No. " + d.number + ")?" + warn)) return;
-        b.disabled = true;
-        api("contestants/" + encodeURIComponent(d.number), { method: "DELETE" })
-          .then(function () { toast(d.name + " deleted"); return loadContestants(); })
-          .catch(function (err) { toast(err.message); b.disabled = false; });
+        var warn = c.votes ? "\n\n" + c.name + " has " + nf(c.votes) + " votes. The payment records are kept, but they won't show on the site. To take them off the site but keep everything, use Hide or Evict instead." : "";
+        if (!confirm("Delete " + c.name + " (No. " + c.number + ")?" + warn)) return;
+        busy(b, api("contestants/" + encodeURIComponent(c.number), { method: "DELETE" }))
+          .then(function () { toast(c.name + " deleted"); return loadContestants(); })
+          .catch(function (err) { toast(err.message); });
       }
     });
 
-    /* ---------- editor ---------- */
+    /* ---------- contestant editor ---------- */
     var dlg = $("dlg"), editing = null, pics = { photo: null, poster: null };
     function setPreview(kind) {
       var el = $("pv-" + kind), p = pics[kind];
@@ -414,16 +606,14 @@
       pics.photo = c ? c.photo || null : null; pics.poster = c ? c.poster || null : null;
       setPreview("photo"); setPreview("poster");
       $("f-err").textContent = "";
-      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+      openDlg(dlg);
       setTimeout(function () { (c ? $("f-name") : $("f-number")).focus(); }, 30);
     }
-    function closeEditor() { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
     $("add").addEventListener("click", function () { openEditor(null); });
-    $("f-cancel").addEventListener("click", closeEditor);
+    $("f-cancel").addEventListener("click", function () { closeDlg(dlg); });
     document.querySelectorAll("[data-clear]").forEach(function (b) {
       b.addEventListener("click", function () { pics[b.dataset.clear] = null; setPreview(b.dataset.clear); });
     });
-
     // Shrinks the picture in the browser (max 1200px, JPEG) so uploads are quick on mobile data.
     function shrink(file, square) {
       return new Promise(function (resolve, reject) {
@@ -446,12 +636,11 @@
         if (!file) return;
         var number = $("f-number").value.trim();
         if (!/^[A-Za-z0-9-]{1,20}$/.test(number)) { $("f-err").textContent = "Enter the contestant number first."; $("f-number").focus(); return; }
-        $("f-err").textContent = ""; $("pv-" + kind).textContent = "Uploading…"; $("f-save").disabled = true;
-        shrink(file, kind === "poster")
-          .then(function (data) { return api("upload", { method: "POST", body: { number: number, kind: kind, type: "image/jpeg", data: data } }); })
+        $("f-err").textContent = ""; $("pv-" + kind).textContent = "Uploading…";
+        busy($("f-save"), shrink(file, kind === "poster")
+          .then(function (data) { return api("upload", { method: "POST", body: { number: number, kind: kind, type: "image/jpeg", data: data } }); }))
           .then(function (j) { pics[kind] = j.url; setPreview(kind); })
-          .catch(function (err) { setPreview(kind); $("f-err").textContent = err.message; })
-          .then(function () { $("f-save").disabled = false; });
+          .catch(function (err) { setPreview(kind); $("f-err").textContent = err.message; });
       });
     });
     $("edit-form").addEventListener("submit", function (e) {
@@ -460,44 +649,112 @@
       var req;
       if (editing) req = api("contestants/" + encodeURIComponent(editing.number), { method: "PUT", body: body });
       else { body.number = $("f-number").value.trim(); req = api("contestants", { method: "POST", body: body }); }
-      $("f-save").disabled = true; $("f-err").textContent = "";
-      req.then(function () { closeEditor(); toast(editing ? "Changes saved" : "Contestant added"); return loadContestants(); })
-        .catch(function (err) { $("f-err").textContent = err.message; })
-        .then(function () { $("f-save").disabled = false; });
+      $("f-err").textContent = "";
+      busy($("f-save"), req).then(function () { closeDlg(dlg); toast(editing ? "Changes saved" : "Contestant added"); return loadContestants(); })
+        .catch(function (err) { $("f-err").textContent = err.message; });
     });
 
-    /* ---------- payments ---------- */
-    var PAGE = 50, offset = 0, ptimer = null;
-    function fillFilter() {
-      var sel = $("p-c"), cur = sel.value;
-      var nums = list.map(function (c) { return { n: c.number, label: "No. " + c.number + " · " + c.name }; })
-        .concat(orphans.map(function (o) { return { n: o.number, label: "No. " + o.number + " (removed)" }; }));
-      sel.innerHTML = '<option value="">All contestants</option>' + nums.map(function (x) { return '<option value="' + esc(x.n) + '">' + esc(x.label) + "</option>"; }).join("");
-      sel.value = cur;
+    /* ---------- vote adjustments ---------- */
+    var adjusting = null;
+    function openAdjust(c) {
+      adjusting = c; $("ad-title").textContent = "Adjust votes · " + c.name; $("ad-v").value = ""; $("ad-r").value = ""; $("ad-err").textContent = "";
+      openDlg($("adlg")); setTimeout(function () { $("ad-v").focus(); }, 30);
     }
+    function adjust(contestant, votes, reason, btn, errEl) {
+      errEl.textContent = "";
+      return busy(btn, api("adjustments", { method: "POST", body: { contestant: contestant, votes: Number(votes), reason: reason } }))
+        .then(function () { toast("Votes adjusted"); loadAdjustments(); return loadContestants(); })
+        .catch(function (err) { errEl.textContent = err.message; throw err; });
+    }
+    $("ad-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      adjust(adjusting.number, $("ad-v").value, $("ad-r").value, e.target.querySelector("[type=submit]"), $("ad-err"))
+        .then(function () { closeDlg($("adlg")); }, function () {});
+    });
+    $("adj-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      adjust($("adj-c").value, $("adj-v").value, $("adj-r").value, e.target.querySelector("[type=submit]"), $("adj-err"))
+        .then(function () { $("adj-v").value = ""; $("adj-r").value = ""; }, function () {});
+    });
+    function nameOf(n) { var c = find(n); return c ? c.name : "removed contestant"; }
+    function loadAdjustments() {
+      api("adjustments").then(function (j) {
+        var a = j.adjustments || [];
+        $("adj-list").innerHTML = a.length ? a.slice(0, 20).map(function (x) {
+          return "<li><b>" + (x.votes > 0 ? "+" : "") + nf(x.votes) + "</b> for No. " + esc(x.contestant_number) + " " + esc(nameOf(x.contestant_number)) + "<small>" + esc(x.reason) + " · " + esc(when(x.created_at)) + "</small></li>";
+        }).join("") : '<li class="muted">No adjustments yet.</li>';
+      }).catch(function () {});
+    }
+
+    /* ---------- show controls ---------- */
+    function renderSettings() {
+      $("set-open").checked = settings.voting_open !== false;
+      $("set-hide").checked = !!settings.tally_hidden;
+      if (document.activeElement !== $("set-msg")) $("set-msg").value = settings.closed_message || "";
+      $("set-scope").querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String((settings.leaderboard_scope || "total") === b.dataset.v)); });
+      $("round-now").innerHTML = settings.round_name ? "Current round: <b>" + esc(settings.round_name) + "</b>, started " + esc(when(settings.round_started_at)) + "." : "No round started yet. All votes count as all-time votes.";
+    }
+    function saveSettings(patch, msg) {
+      return api("settings", { method: "PUT", body: patch }).then(function (j) { settings = j.settings; renderSettings(); renderOverview(); toast(msg); })
+        .catch(function (err) { toast(err.message); renderSettings(); });
+    }
+    $("set-open").addEventListener("change", function () {
+      var open = $("set-open").checked;
+      if (!open && !confirm("Close voting now? Contestant pages will stop taking votes until you reopen it.")) { $("set-open").checked = true; return; }
+      saveSettings({ voting_open: open }, open ? "Voting is open" : "Voting is closed");
+    });
+    $("set-hide").addEventListener("change", function () { saveSettings({ tally_hidden: $("set-hide").checked }, $("set-hide").checked ? "Vote counts hidden from the public" : "Vote counts are public"); });
+    $("set-msg-save").addEventListener("click", function () { saveSettings({ closed_message: $("set-msg").value }, "Message saved"); });
+    $("set-scope").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.v === "round" && !settings.round_started_at) { toast("Start a round first."); return; }
+      saveSettings({ leaderboard_scope: b.dataset.v }, b.dataset.v === "round" ? "Leaderboard shows this round" : "Leaderboard shows all-time votes");
+    });
+    $("round-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = $("round-name").value.trim(); if (!name) { $("round-name").focus(); return; }
+      if (!confirm("Start “" + name + "” now? “This round” counts restart from zero. All-time totals are not affected.")) return;
+      busy(e.target.querySelector("button"), api("round", { method: "POST", body: { name: name } }))
+        .then(function (j) { settings = j.settings; $("round-name").value = ""; toast(name + " started"); return loadContestants(); })
+        .catch(function (err) { toast(err.message); });
+    });
+    function fillPickers() {
+      var opts = list.map(function (c) { return { n: c.number, label: "No. " + c.number + " · " + c.name }; })
+        .concat(orphans.map(function (o) { return { n: o.number, label: "No. " + o.number + " (removed)" }; }));
+      var html = opts.map(function (x) { return '<option value="' + esc(x.n) + '">' + esc(x.label) + "</option>"; }).join("");
+      var sel = $("p-c"), cur = sel.value;
+      sel.innerHTML = '<option value="">All contestants</option>' + html; sel.value = cur;
+      var a = $("adj-c"), acur = a.value; a.innerHTML = '<option value="">Choose a contestant</option>' + html; a.value = acur;
+    }
+
+    /* ---------- payments ---------- */
+    var PAGE = 50, offset = 0, ptimer = null, pEmail = "", rows = [];
     function query(extra) {
       var p = new URLSearchParams();
       if ($("p-q").value.trim()) p.set("q", $("p-q").value.trim());
       if ($("p-c").value) p.set("contestant", $("p-c").value);
+      if ($("p-f").value) p.set("filter", $("p-f").value);
+      if (pEmail) p.set("email", pEmail);
       Object.keys(extra || {}).forEach(function (k) { p.set(k, extra[k]); });
       return p.toString();
     }
-    function nameOf(n) { var c = find(n); return c ? c.name : ""; }
     function loadPayments(off) {
       offset = Math.max(0, off || 0);
-      $("csv").href = "/api/admin/payments.csv?" + query();
+      $("csv").href = "/api/admin/export/payments.csv?" + query();
+      $("p-email-filter").hidden = !pEmail;
+      $("p-email-filter").innerHTML = pEmail ? "Showing payments from <b>" + esc(pEmail) + '</b> · <a href="#" id="clear-email">show everyone</a>' : "";
       $("plist").innerHTML = '<tr><td colspan="6" class="empty">Loading…</td></tr>';
       api("payments?" + query({ limit: PAGE, offset: offset })).then(function (j) {
-        var rows = j.payments || [];
-        $("plist").innerHTML = rows.length ? rows.map(function (r) {
-          var when = new Date(r.paid_at);
-          return "<tr><td data-l=\"Paid\">" + esc(when.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) + ", " + when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })) + "</td>" +
+        rows = j.payments || [];
+        $("plist").innerHTML = rows.length ? rows.map(function (r, i) {
+          return '<tr data-i="' + i + '"' + (r.voided ? ' class="voided"' : "") + '><td data-l="Paid">' + esc(when(r.paid_at)) + "</td>" +
             '<td data-l="Contestant"><b>No. ' + esc(r.contestant_number) + "</b> " + esc(nameOf(r.contestant_number)) + "</td>" +
             '<td class="r" data-l="Votes">' + nf(r.votes) + "</td>" +
             '<td class="r" data-l="Amount">' + naira(r.amount_kobo) + "</td>" +
-            '<td data-l="Email">' + esc(r.email || "–") + "</td>" +
-            '<td data-l="Ref"><span class="ref">' + esc(r.reference) + "</span></td></tr>";
-        }).join("") : '<tr><td colspan="6" class="empty">No payments yet' + (query() ? " for this search" : "") + ".</td></tr>";
+            '<td data-l="Voter">' + esc(r.voter_name ? r.voter_name + " · " : "") + esc(r.email || "–") + "</td>" +
+            '<td data-l="Ref"><span class="ref">' + esc(r.reference) + "</span>" +
+              '<span class="flags">' + (r.source === "requery" ? '<span class="pill ok">Requery</span>' : "") + (r.voided ? '<span class="pill off">Removed</span>' : "") + flagPills(r.flags) + "</span></td></tr>";
+        }).join("") : '<tr><td colspan="6" class="empty">No payments' + (query() ? " match this search" : " yet") + ".</td></tr>";
         var total = j.total || 0;
         $("prange").textContent = total ? (offset + 1) + "–" + (offset + rows.length) + " of " + nf(total) : "";
         $("prev").disabled = offset === 0;
@@ -506,8 +763,166 @@
     }
     $("p-q").addEventListener("input", function () { clearTimeout(ptimer); ptimer = setTimeout(function () { loadPayments(0); }, 350); });
     $("p-c").addEventListener("change", function () { loadPayments(0); });
+    $("p-f").addEventListener("change", function () { loadPayments(0); });
     $("prev").addEventListener("click", function () { loadPayments(offset - PAGE); });
     $("next").addEventListener("click", function () { loadPayments(offset + PAGE); });
+    document.addEventListener("click", function (e) { if (e.target.id === "clear-email") { e.preventDefault(); pEmail = ""; loadPayments(0); } });
+    $("plist").addEventListener("click", function (e) { var tr = e.target.closest("tr[data-i]"); if (tr) showPayment(rows[Number(tr.dataset.i)]); });
+
+    /* ---------- payment details + live requery ---------- */
+    var pdlg = $("pdlg");
+    function kv(pairs) {
+      return '<dl class="kv">' + pairs.filter(function (p) { return p[1] != null && p[1] !== ""; }).map(function (p) { return "<dt>" + esc(p[0]) + "</dt><dd>" + p[1] + "</dd>"; }).join("") + "</dl>";
+    }
+    function recordHTML(r) {
+      return kv([
+        ["Reference", '<span class="mono">' + esc(r.reference) + "</span>"],
+        ["Contestant", "No. " + esc(r.contestant_number) + " · " + esc(nameOf(r.contestant_number))],
+        ["Votes", nf(r.votes)], ["Amount", naira(r.amount_kobo)], ["Paystack fee", r.fees_kobo == null ? null : naira(r.fees_kobo)],
+        ["Paid", esc(when(r.paid_at))], ["Voter", esc(r.voter_name || "")], ["Email", esc(r.email || "")], ["Phone", esc(r.phone || "")],
+        ["Paid with", esc([r.channel, r.card].filter(Boolean).join(" · "))], ["Bank response", esc(r.gateway_response || "")],
+        ["IP address", esc(r.ip_address || "")], ["Paystack ID", esc(r.paystack_id || "")],
+        ["Recorded by", r.source === "requery" ? "Admin requery" : "Paystack webhook"],
+        ["Flags", (r.flags || []).length ? flagPills(r.flags) : null],
+        ["Status", r.voided ? '<span class="pill off">Removed from count</span> ' + esc(r.void_reason || "") : '<span class="pill ok">Counted</span>'],
+      ]);
+    }
+    function paystackHTML(p) {
+      if (!p) return "";
+      return "<h3 style=\"margin:16px 0 8px\">Paystack says (live)</h3>" + kv([
+        ["Status", '<span class="pill ' + (p.status === "success" ? "ok" : "off") + '">' + esc(p.status) + "</span>"],
+        ["Amount", naira(p.amountKobo) + " " + esc(p.currency || "")], ["Fee", p.feesKobo == null ? null : naira(p.feesKobo)],
+        ["Paid", esc(when(p.paidAt))], ["Channel", esc(p.channel || "")], ["Bank response", esc(p.gatewayResponse || "")],
+        ["Customer", esc([p.customer.name, p.customer.email, p.customer.phone].filter(Boolean).join(" · "))],
+        ["Card / bank", p.card ? esc([p.card.type, p.card.last4 ? "·· " + p.card.last4 : "", p.card.bank, p.card.country].filter(Boolean).join(" ")) : null],
+        ["For contestant", p.metadata.contestant_number ? "No. " + esc(p.metadata.contestant_number) + (p.metadata.contestant_name ? " · " + esc(p.metadata.contestant_name) : "") : null],
+        ["IP address", esc(p.ipAddress || "")], ["Paystack ID", esc(p.id || "")],
+      ]);
+    }
+    function showPayment(r) {
+      $("pd-title").textContent = "Payment · No. " + r.contestant_number;
+      $("pd-body").innerHTML = recordHTML(r);
+      setActions(r, null);
+      openDlg(pdlg);
+    }
+    function setActions(r, rq) {
+      var html = '<button class="btn" type="button" data-close>Close</button>';
+      if (r) html = (r.voided ? '<button class="btn" type="button" id="pd-restore">Count it again</button>' : '<button class="btn btn-danger" type="button" id="pd-void">Remove from count</button>') + html;
+      if (rq && rq.canCredit) html += '<button class="btn btn-primary" type="button" id="pd-credit">Credit ' + nf(rq.expected.votes) + " vote(s) to No. " + esc(rq.expected.contestant) + "</button>";
+      else html += '<button class="btn btn-primary" type="button" id="pd-requery">Check with Paystack</button>';
+      $("pd-acts").innerHTML = html;
+      $("pd-acts").querySelector("[data-close]").addEventListener("click", function () { closeDlg(pdlg); });
+      var ref = r ? r.reference : rq && rq.paystack && rq.paystack.reference;
+      if ($("pd-requery")) $("pd-requery").addEventListener("click", function () { requery(ref, $("pd-requery")); });
+      if ($("pd-credit")) $("pd-credit").addEventListener("click", function () {
+        busy($("pd-credit"), api("credit", { method: "POST", body: { reference: ref } }))
+          .then(function (j) { toast("Votes credited"); showPayment(j.payment); loadContestants(); if (current === "payments") loadPayments(offset); })
+          .catch(function (err) { toast(err.message); });
+      });
+      if ($("pd-void")) $("pd-void").addEventListener("click", function () {
+        var reason = prompt("Why remove this payment from the count? (e.g. refunded, chargeback, duplicate)");
+        if (!reason || !reason.trim()) return;
+        busy($("pd-void"), api("payments/" + encodeURIComponent(ref) + "/void", { method: "POST", body: { reason: reason } }))
+          .then(function (j) { toast("Removed from the count"); showPayment(j.payment); loadContestants(); loadPayments(offset); })
+          .catch(function (err) { toast(err.message); });
+      });
+      if ($("pd-restore")) $("pd-restore").addEventListener("click", function () {
+        busy($("pd-restore"), api("payments/" + encodeURIComponent(ref) + "/restore", { method: "POST", body: {} }))
+          .then(function (j) { toast("Counted again"); showPayment(j.payment); loadContestants(); loadPayments(offset); })
+          .catch(function (err) { toast(err.message); });
+      });
+    }
+    function requery(reference, btn) {
+      if (!hasPaystack) { toast("PAYSTACK_SECRET_KEY isn't set in Netlify."); }
+      return busy(btn, api("requery", { method: "POST", body: { reference: reference } })).then(function (j) {
+        $("pd-title").textContent = "Payment check";
+        $("pd-body").innerHTML = '<ul class="notes">' + (j.notes || []).map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>" +
+          (j.recorded ? '<h3 style="margin:16px 0 8px">Our record</h3>' + recordHTML(j.recorded) : '<p class="muted">We have no record of this payment.</p>') +
+          paystackHTML(j.paystack);
+        setActions(j.recorded, j);
+        if (!pdlg.open) openDlg(pdlg);
+      }).catch(function (err) { toast(err.message); });
+    }
+    $("rq-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var ref = $("rq-ref").value.trim();
+      if (!ref) { $("rq-ref").focus(); return; }
+      requery(ref, e.target.querySelector("button"));
+    });
+    $("rc-go").addEventListener("click", function () {
+      $("rc-out").innerHTML = '<p class="muted">Scanning Paystack…</p>';
+      busy($("rc-go"), api("reconcile?days=" + $("rc-days").value)).then(function (j) {
+        var m = j.missing || [];
+        $("rc-out").innerHTML = '<p class="muted">Checked ' + nf(j.checked) + " debate payment(s) on Paystack" + (j.truncated ? " (the newest 2,000 only)" : "") + ". " +
+          (m.length ? "<b>" + m.length + " not counted:</b>" : "All of them are counted. ✓") + "</p>" +
+          (m.length ? '<ul class="list">' + m.map(function (x) {
+            return '<li><b>' + nf(x.votes) + " vote(s)</b> for No. " + esc(x.contestant) + " · " + naira(x.amountKobo) + '<small class="mono">' + esc(x.reference) + " · " + esc(x.email || "") + " · " + esc(when(x.paidAt)) + '</small><button class="btn btn-sm btn-primary" type="button" data-credit="' + esc(x.reference) + '" style="margin-top:6px">Credit</button></li>';
+          }).join("") + "</ul>" : "");
+      }).catch(function (err) { $("rc-out").innerHTML = '<p class="err">' + esc(err.message) + "</p>"; });
+    });
+    $("rc-out").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-credit]"); if (!b) return;
+      busy(b, api("credit", { method: "POST", body: { reference: b.dataset.credit } }))
+        .then(function () { b.textContent = "Credited ✓"; b.disabled = true; toast("Votes credited"); loadContestants(); })
+        .catch(function (err) { toast(err.message); });
+    });
+
+    /* ---------- voters ---------- */
+    var voff = 0, vtimer = null, vrows = [];
+    function loadVoters(off) {
+      voff = Math.max(0, off || 0);
+      var p = new URLSearchParams({ limit: PAGE, offset: voff, sort: $("v-sort").value });
+      if ($("v-q").value.trim()) p.set("q", $("v-q").value.trim());
+      $("vlist").innerHTML = '<tr><td colspan="6" class="empty">Loading…</td></tr>';
+      api("voters?" + p).then(function (j) {
+        vrows = j.voters || [];
+        $("vlist").innerHTML = vrows.length ? vrows.map(function (v, i) {
+          return '<tr data-v="' + i + '"><td data-l="Voter" class="voter"><b>' + esc(v.name || v.email) + "</b>" + (v.name ? "<br><small class=\"muted\">" + esc(v.email) + "</small>" : "") + (v.phone ? "<br><small class=\"muted\">" + esc(v.phone) + "</small>" : "") + (v.flagged ? ' <span class="pill warn">Flagged</span>' : "") + "</td>" +
+            '<td class="r" data-l="Votes">' + nf(v.votes) + "</td>" +
+            '<td class="r" data-l="Spent">' + naira(v.amount_kobo) + "</td>" +
+            '<td class="r" data-l="Payments">' + nf(v.payments) + "</td>" +
+            '<td data-l="Voted for">' + (v.contestants || []).map(function (n) { return "No. " + esc(n); }).join(", ") + "</td>" +
+            '<td data-l="Last vote">' + esc(when(v.last_paid)) + "</td></tr>";
+        }).join("") : '<tr><td colspan="6" class="empty">No voters yet.</td></tr>';
+        var total = j.total || 0;
+        $("vrange").textContent = total ? (voff + 1) + "–" + (voff + vrows.length) + " of " + nf(total) + " voters" : "";
+        $("vprev").disabled = voff === 0;
+        $("vnext").disabled = voff + vrows.length >= total;
+      }).catch(function (err) { $("vlist").innerHTML = '<tr><td colspan="6" class="empty">' + esc(err.message) + "</td></tr>"; });
+    }
+    $("v-q").addEventListener("input", function () { clearTimeout(vtimer); vtimer = setTimeout(function () { loadVoters(0); }, 350); });
+    $("v-sort").addEventListener("change", function () { loadVoters(0); });
+    $("vprev").addEventListener("click", function () { loadVoters(voff - PAGE); });
+    $("vnext").addEventListener("click", function () { loadVoters(voff + PAGE); });
+    $("vlist").addEventListener("click", function (e) {
+      var tr = e.target.closest("tr[data-v]"); if (!tr) return;
+      pEmail = vrows[Number(tr.dataset.v)].email; $("p-q").value = ""; $("p-c").value = ""; $("p-f").value = "";
+      go("payments");
+    });
+
+    /* ---------- activity log ---------- */
+    var LOG_LABELS = { login: "Signed in", login_failed: "Wrong password", contestant_add: "Added contestant", contestant_edit: "Edited contestant", contestant_hide: "Hid contestant", contestant_show: "Showed contestant", contestant_eliminate: "Evicted contestant", contestant_reinstate: "Reinstated contestant", contestant_delete: "Deleted contestant", payment_void: "Removed payment from count", payment_restore: "Counted payment again", payment_credit: "Credited missed payment", requery: "Checked payment with Paystack", reconcile: "Scanned Paystack for missed payments", vote_adjust: "Adjusted votes", settings: "Changed show settings", round_start: "Started round", export: "Downloaded" };
+    var loff = 0;
+    function describe(d) {
+      if (!d) return "";
+      return Object.keys(d).filter(function (k) { return d[k] !== null && d[k] !== "" && k !== "photo" && k !== "poster" && k !== "message"; })
+        .map(function (k) { var v = d[k]; return k.replace(/_/g, " ") + ": " + (typeof v === "object" ? JSON.stringify(v) : v); }).join(" · ");
+    }
+    function loadLog(off) {
+      loff = Math.max(0, off || 0);
+      api("log?limit=50&offset=" + loff).then(function (j) {
+        var l = j.log || [];
+        $("loglist").innerHTML = l.length ? l.map(function (x) {
+          return "<li><b>" + esc(LOG_LABELS[x.action] || x.action) + "</b>" + (x.target ? " · " + esc(x.target) : "") +
+            "<small>" + esc(when(x.at)) + (x.ip ? " · " + esc(x.ip) : "") + (x.details ? " · " + esc(describe(x.details)) : "") + "</small></li>";
+        }).join("") : '<li class="muted">Nothing yet.</li>';
+        var total = j.total || 0;
+        $("lrange").textContent = total ? (loff + 1) + "–" + (loff + l.length) + " of " + nf(total) : "";
+        $("lprev").disabled = loff === 0; $("lnext").disabled = loff + l.length >= total;
+      }).catch(function (err) { $("loglist").innerHTML = '<li class="err">' + esc(err.message) + "</li>"; });
+    }
+    $("lprev").addEventListener("click", function () { loadLog(loff - 50); });
+    $("lnext").addEventListener("click", function () { loadLog(loff + 50); });
 
     /* ---------- start ---------- */
     api("session").then(showApp).catch(function (err) {

@@ -38,9 +38,16 @@
     var timer = setTimeout(function () { if (!finished) { finished = true; done(); } }, 5000);
     fetch(url, { headers: { Accept: "application/json" } })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { if (j && Array.isArray(j.contestants) && !finished) RHEX.data.contestants = j.contestants; })
+      .then(function (j) { if (j && Array.isArray(j.contestants) && !finished) { RHEX.data.contestants = j.contestants; RHEX.data.settings = j.settings || {}; } })
       .catch(function () {})
       .then(function () { if (!finished) { finished = true; clearTimeout(timer); done(); } });
+  };
+  // Returns a message when voting for this contestant is switched off (null when open).
+  RHEX.votingBlocked = function (c) {
+    var st = RHEX.data.settings || {};
+    if (st.votingOpen === false) return st.closedMessage || "Voting is closed for now. Please check back for the next round.";
+    if (c && c.eliminated) return c.name + " has been evicted from the show, so voting for them is closed. Thank you for your support.";
+    return null;
   };
   RHEX.naira = function (n) {
     return "₦" + Number(n).toLocaleString("en-NG", { maximumFractionDigits: 0 });
@@ -63,7 +70,7 @@
   RHEX.cardHTML = function (c, totals, base) {
     return '<a class="ccard" href="' + (base || "") + RHEX.contestantUrl(c) + '">' +
       '<div class="art">' + RHEX.artHTML(c) + '</div>' +
-      '<span class="tag">No. ' + RHEX.escape(c.number) + '</span>' +
+      '<span class="tag">No. ' + RHEX.escape(c.number) + (c.eliminated ? ' · Evicted' : '') + '</span>' +
       (totals ? '<span class="votes-pill">' + RHEX.votesLabel(totals[c.number]) + '</span>' : '') +
       '<div class="meta"><h3>' + RHEX.escape(c.name) + '</h3><span>Vote now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>' +
       '</a>';

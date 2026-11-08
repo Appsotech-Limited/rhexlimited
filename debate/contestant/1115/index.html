@@ -103,6 +103,10 @@
                 </div>
               </div>
               <div class="field">
+                <label for="voter-name">Your name <small>(optional)</small></label>
+                <input id="voter-name" type="text" autocomplete="name" maxlength="80" placeholder="Your name">
+              </div>
+              <div class="field">
                 <label for="email">Your email (for the receipt)</label>
                 <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required>
               </div>
@@ -173,7 +177,7 @@
 
   <script src="https://js.paystack.co/v2/inline.js" defer></script>
   <script src="data/contestants.js?v=aa0b9a5918"></script>
-  <script src="assets/debate.js?v=1b419f75a1"></script>
+  <script src="assets/debate.js?v=29dc0d9171"></script>
   <script>
     window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {};
@@ -216,7 +220,7 @@
         var n = votes();
         $("total").textContent = R.naira(Math.max(0, n) * price);
         bundlesEl.querySelectorAll(".bundle").forEach(function (b) { b.setAttribute("aria-pressed", String(Number(b.dataset.n) === n)); });
-        $("pay").textContent = n > 0 ? "Vote " + n.toLocaleString() + (n === 1 ? " time" : " times") + " · " + R.naira(n * price) : "Vote now";
+        $("pay").textContent = R.votingBlocked(c) ? "Voting closed" : n > 0 ? "Vote " + n.toLocaleString() + (n === 1 ? " time" : " times") + " · " + R.naira(n * price) : "Vote now";
       }
       /* ----- phone: sticky vote bar until the vote panel is on screen ----- */
       var dock = $("vote-dock"), dockBtn = $("dock-btn");
@@ -251,6 +255,9 @@
       });
 
       if (!keyReady) { $("setup-notice").hidden = false; $("pay").disabled = true; }
+      var blocked = R.votingBlocked(c);
+      if (blocked) { $("setup-notice").textContent = blocked; $("setup-notice").hidden = false; $("pay").disabled = true; $("pay").textContent = "Voting closed"; }
+      try { var savedName = localStorage.getItem("rhex-vote-name"); if (savedName) $("voter-name").value = savedName; } catch (e) {}
 
       /* ----- payment ----- */
       var form = $("vote-form"), err = $("err");
@@ -261,9 +268,11 @@
         if (n < 1) { err.textContent = "Choose at least one vote."; votesEl.focus(); return; }
         if (n > maxVotes) { err.textContent = "You can cast up to " + maxVotes.toLocaleString() + " votes per payment."; votesEl.focus(); return; }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Enter a valid email so Paystack can send your receipt."; $("email").focus(); return; }
+        if (R.votingBlocked(c)) { err.textContent = R.votingBlocked(c); return; }
         if (!keyReady) { err.textContent = "Online voting isn’t switched on yet."; return; }
         if (typeof window.PaystackPop !== "function") { err.textContent = "The payment window couldn’t load. Check your connection and try again."; return; }
 
+        try { localStorage.setItem("rhex-vote-name", $("voter-name").value.trim()); } catch (e9) {}
         var btn = $("pay"); btn.disabled = true;
         var reference = "RHEX-PRES-" + c.number + "-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
         try {
@@ -275,6 +284,7 @@
             reference: reference,
             metadata: {
               show: "RHEX Reality Debate Show (The President)",
+              voter_name: ($("voter-name").value || "").trim().slice(0, 80) || undefined,
               contestant_number: String(c.number),
               contestant_name: c.name,
               votes: n,
