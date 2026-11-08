@@ -46,7 +46,7 @@ The site is hosted on Cloudflare Pages, which is free and adds no badge. The vot
 1. In Cloudflare, go to **Workers & Pages → Create → Pages → Connect to Git** and pick `Appsotech-Limited/rhexlimited`, branch `main`.
 2. Set **Build command** to `node debate/build-contestants.mjs` and **Build output directory** to `.`.
 3. Under **Settings → Variables and Secrets**, add the same values the site used on Netlify, for Production:
-   - `SUPABASE_URL`, `VOTE_PRICE_NAIRA` (100) and `SITE_URL` (`https://rhexlimited.com`) as plain text
+   - `SUPABASE_URL`, `VOTE_PRICE_NAIRA` and `SITE_URL` are already set under `[vars]` in `wrangler.toml` (Cloudflare ignores plain-text variables set in the dashboard when that file exists)
    - `SUPABASE_SERVICE_ROLE_KEY`, `PAYSTACK_SECRET_KEY` and `ADMIN_PASSWORD` as secrets
    - optional: `DEBATE_BUILD_HOOK_URL`, a Cloudflare deploy hook (**Settings → Builds → Deploy hooks**), so contestant changes rebuild link previews
 4. Deploy, and check `https://<project>.pages.dev/api/debate/tally` returns vote totals.
