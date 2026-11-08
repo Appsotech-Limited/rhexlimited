@@ -36,7 +36,7 @@ Everything below is free-tier. Allow about 20 minutes.
 
 ### 3. Paystack
 1. Put your **public** key (`pk_live_…`) in `paystackPublicKey` in `data/contestants.js`. Never put the secret key in website files.
-2. In **Paystack Dashboard → Settings → API Keys & Webhooks**, set the **Live Webhook URL** to `https://www.rhexlimited.com/api/debate/paystack-webhook`.
+2. In **Paystack Dashboard → Settings → API Keys & Webhooks**, set the **Live Webhook URL** to `https://rhexlimited.com/api/debate/paystack-webhook`.
 
 ## How a vote is counted
 

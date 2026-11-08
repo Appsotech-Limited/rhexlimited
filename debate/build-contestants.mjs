@@ -10,7 +10,7 @@ import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const SITE = (process.env.SITE_URL || process.env.URL || "https://www.rhexlimited.com").replace(/\/$/, "");
+const SITE = (process.env.SITE_URL || process.env.URL || "https://rhexlimited.com").replace(/\/$/, "");
 
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(here, "data/contestants.js"), "utf8"), sandbox);
