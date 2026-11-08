@@ -286,7 +286,9 @@
       });
 
       /* ----- sharing ----- */
-      var shareText = "Please vote for " + c.name + " (Contestant " + c.number + ") in the RHEX Reality Debate Show (The President). Each vote is " + R.naira(price) + ".";
+      // Shares use the short one-tap vote link (/v/<number>), which opens straight to payment.
+      pageUrl = location.origin + "/v/" + encodeURIComponent(c.number);
+      var shareText = "Please vote for " + c.name + " (Contestant " + c.number + ") in the RHEX Reality Debate Show (The President). Tap to vote, " + R.naira(price) + " per vote:";
       $("share-wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText + " " + pageUrl);
       $("share-x").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText) + "&url=" + encodeURIComponent(pageUrl);
       $("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(pageUrl);

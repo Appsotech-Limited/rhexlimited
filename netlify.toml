@@ -7,6 +7,17 @@
 [functions]
   directory = "netlify/functions"
 
+# Short one-tap vote links: rhexlimited.com/v/1120
+[[redirects]]
+  from = "/v/:number"
+  to = "/debate/vote/:number/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/v/*"
+  to = "/debate/contestant/_unknown/index.html"
+  status = 404
+
 # Unknown contestant numbers get a friendly "contestant not found" page.
 [[redirects]]
   from = "/debate/contestant/*"

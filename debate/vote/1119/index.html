@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/debate/">
+  <!-- Generated per contestant by debate/build-contestants.mjs. Quick-vote page served at /v/<number>. Edit this template, not the copies in debate/vote/. -->
+  <title>Vote for Doxa Oyetunde · Contestant 1119 · The President</title>
+  <meta name="description" content="Tap to vote for Doxa Oyetunde (Contestant 1119) in the RHEX Reality Debate Show (The President). ₦100 per vote.">
+  <link rel="canonical" href="https://rhexlimited.com/debate/contestant/1119/">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Royal Home of Excellence">
+  <meta property="og:url" content="https://rhexlimited.com/debate/contestant/1119/">
+  <meta property="og:title" content="Vote for Doxa Oyetunde · Contestant 1119 · The President">
+  <meta property="og:description" content="Tap to vote for Doxa Oyetunde (Contestant 1119) in the RHEX Reality Debate Show (The President). ₦100 per vote.">
+  <meta property="og:image" content="https://rhexlimited.com/debate/assets/contestants/1119-poster.jpg">
+  <meta property="og:image:alt" content="Doxa Oyetunde, Contestant 1119">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vote for Doxa Oyetunde · Contestant 1119 · The President">
+  <meta name="twitter:description" content="Tap to vote for Doxa Oyetunde (Contestant 1119) in the RHEX Reality Debate Show (The President). ₦100 per vote.">
+  <meta name="twitter:image" content="https://rhexlimited.com/debate/assets/contestants/1119-poster.jpg">
+  <script>window.RHEX_CONTESTANT = "1119";</script>
+  <meta name="theme-color" content="#15161C">
+  <link rel="icon" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <script>
+    (function () { try { var t = localStorage.getItem("rhex-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/debate.css?v=6ec43867ce">
+</head>
+<body class="qv">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <main class="qv-main">
+    <div class="qv-card" id="qv" hidden>
+      <div class="qv-head">
+        <div class="qv-photo" id="art"></div>
+        <div>
+          <span class="eyebrow">The President · No. <span id="num"></span></span>
+          <h1 id="name"></h1>
+          <div class="qv-count" id="tally" hidden><b id="tally-votes">0</b> votes so far</div>
+        </div>
+      </div>
+
+      <form id="vote-form" novalidate>
+        <div class="bundles" role="group" aria-label="How many votes" id="bundles"></div>
+        <div class="qv-row">
+          <div class="stepper" aria-label="Number of votes">
+            <button type="button" data-step="-1" aria-label="One vote fewer">−</button>
+            <input id="votes" type="number" inputmode="numeric" min="1" step="1" value="5" aria-label="Number of votes">
+            <button type="button" data-step="1" aria-label="One vote more">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email for your receipt</label>
+          <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <button class="btn btn-primary vote-btn" type="submit" id="pay">Vote now</button>
+        <div class="err" id="err" role="alert"></div>
+        <div class="notice" id="setup-notice" hidden>Online voting isn’t switched on yet. Please check back soon.</div>
+        <div class="secure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Secured by Paystack · card, bank transfer or USSD
+        </div>
+      </form>
+      <a class="qv-more" id="profile-link" href="./">See profile, standings and all contestants →</a>
+    </div>
+
+    <div class="qv-card" id="notfound" hidden>
+      <h1>Contestant not found</h1>
+      <p class="lede">This vote link doesn’t match a contestant.</p>
+      <a class="btn btn-primary" href="contestant/">Find a contestant</a>
+    </div>
+  </main>
+
+  <div class="thanks" id="thanks" role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+    <div class="card">
+      <span class="eyebrow both">Votes received</span>
+      <h2 id="thanks-title" class="gold-text">Thank you!</h2>
+      <p id="thanks-msg"></p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-primary" id="thanks-share" target="_blank" rel="noopener">Share on WhatsApp</a>
+        <button class="btn btn-ghost" type="button" id="thanks-close">Vote again</button>
+      </div>
+      <div class="ref" id="thanks-ref"></div>
+    </div>
+  </div>
+
+  <script src="https://js.paystack.co/v2/inline.js" defer></script>
+  <script src="data/contestants.js?v=c66bb3f426"></script>
+  <script src="assets/debate.js?v=98119003c7"></script>
+  <script>
+    (function () {
+      var R = window.RHEX, cfg = R.data.config || {};
+      var $ = function (s) { return document.getElementById(s); };
+      var price = Number(cfg.votePrice) || 100;
+      var maxVotes = Number(cfg.maxVotesPerPayment) || 10000;
+      var key = String(cfg.paystackPublicKey || "");
+      var keyReady = /^pk_(live|test)_[A-Za-z0-9]+$/.test(key) && key.indexOf("REPLACE") === -1;
+      var m = location.pathname.match(/\/(?:v|vote)\/([^\/]+)/);
+      var id = String(window.RHEX_CONTESTANT || (m && decodeURIComponent(m[1])) || "");
+      var c = (R.data.contestants || []).filter(function (x) { return String(x.number) === id.trim(); })[0];
+      if (!c) { $("notfound").hidden = false; return; }
+      $("qv").hidden = false;
+      document.title = "Vote " + c.name + " · No. " + c.number;
+
+      $("art").innerHTML = R.artHTML(c);
+      $("num").textContent = c.number;
+      $("name").textContent = c.name;
+      $("profile-link").href = R.contestantUrl(c);
+
+      /* votes */
+      var votesEl = $("votes"), bundlesEl = $("bundles");
+      var bundles = cfg.voteBundles || [1, 5, 10, 20];
+      bundlesEl.innerHTML = bundles.map(function (n) {
+        return '<button type="button" class="bundle" data-n="' + n + '" aria-pressed="false"><b>' + n + "</b><small>" + R.naira(n * price) + "</small></button>";
+      }).join("");
+      function votes() { var n = Math.floor(Number(votesEl.value)); return isFinite(n) ? n : 0; }
+      function update() {
+        var n = votes();
+        bundlesEl.querySelectorAll(".bundle").forEach(function (b) { b.setAttribute("aria-pressed", String(Number(b.dataset.n) === n)); });
+        $("pay").textContent = n > 0 ? "Pay " + R.naira(n * price) + " · " + n.toLocaleString() + (n === 1 ? " vote" : " votes") : "Vote now";
+      }
+      bundlesEl.addEventListener("click", function (e) {
+        var b = e.target.closest(".bundle"); if (!b) return;
+        votesEl.value = b.dataset.n; update();
+        var r = b.getBoundingClientRect(); R.burst(r.left + r.width / 2, r.top + r.height / 2, 0.35);
+      });
+      document.querySelectorAll("[data-step]").forEach(function (btn) {
+        btn.addEventListener("click", function () { votesEl.value = Math.max(1, votes() + Number(btn.dataset.step)); update(); });
+      });
+      votesEl.addEventListener("input", update);
+      var q = Number(new URLSearchParams(location.search).get("n"));
+      if (q >= 1 && q <= maxVotes) votesEl.value = Math.floor(q);
+      update();
+
+      /* remember the voter's email on this device so the next vote is one tap */
+      try { var saved = localStorage.getItem("rhex-vote-email"); if (saved) $("email").value = saved; } catch (e) {}
+
+      var tally = R.watchTally(function (t) {
+        R.countUp($("tally-votes"), Number(t[c.number]) || 0);
+        $("tally").hidden = false;
+      });
+      if (!keyReady) { $("setup-notice").hidden = false; $("pay").disabled = true; }
+
+      /* payment: same reference and metadata format as the profile page, so the webhook counts it */
+      var err = $("err");
+      $("vote-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        err.textContent = "";
+        var n = votes(), email = $("email").value.trim();
+        if (n < 1) { err.textContent = "Choose at least one vote."; votesEl.focus(); return; }
+        if (n > maxVotes) { err.textContent = "You can cast up to " + maxVotes.toLocaleString() + " votes per payment."; votesEl.focus(); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Enter your email so Paystack can send your receipt."; $("email").focus(); return; }
+        if (!keyReady) { err.textContent = "Online voting isn’t switched on yet."; return; }
+        if (typeof window.PaystackPop !== "function") { err.textContent = "The payment window couldn’t load. Check your connection and try again."; return; }
+        try { localStorage.setItem("rhex-vote-email", email); } catch (e2) {}
+
+        var btn = $("pay"); btn.disabled = true;
+        var reference = "RHEX-PRES-" + c.number + "-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+        try {
+          new window.PaystackPop().newTransaction({
+            key: key, email: email, amount: n * price * 100, currency: cfg.currency || "NGN", reference: reference,
+            metadata: {
+              show: "RHEX Reality Debate Show (The President)", source: "quick-vote",
+              contestant_number: String(c.number), contestant_name: c.name, votes: n,
+              custom_fields: [
+                { display_name: "Contestant", variable_name: "contestant", value: c.name + " (No. " + c.number + ")" },
+                { display_name: "Votes", variable_name: "votes", value: String(n) }
+              ]
+            },
+            onSuccess: function (tx) {
+              btn.disabled = false;
+              $("thanks-msg").textContent = "Your " + n.toLocaleString() + (n === 1 ? " vote" : " votes") + " for " + c.name + " went through. A receipt is on its way to " + email + ".";
+              $("thanks-ref").textContent = "Reference: " + ((tx && tx.reference) || reference);
+              $("thanks").classList.add("show");
+              document.body.classList.add("celebrating");
+              R.celebrate();
+              setTimeout(tally.refresh, 5000);
+              setTimeout(tally.refresh, 15000);
+            },
+            onCancel: function () { btn.disabled = false; },
+            onError: function (e3) { btn.disabled = false; err.textContent = (e3 && e3.message) || "Payment couldn’t start. Please try again."; }
+          });
+        } catch (ex) { btn.disabled = false; err.textContent = "Payment couldn’t start. Please try again."; }
+      });
+
+      var shareUrl = location.origin + "/v/" + encodeURIComponent(c.number);
+      $("thanks-share").href = "https://wa.me/?text=" + encodeURIComponent("I just voted for " + c.name + " in the RHEX Reality Debate Show (The President). Vote here in one tap: " + shareUrl);
+      function closeThanks() { $("thanks").classList.remove("show"); document.body.classList.remove("celebrating"); }
+      $("thanks-close").addEventListener("click", closeThanks);
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeThanks(); });
+    })();
+  </script>
+</body>
+</html>
