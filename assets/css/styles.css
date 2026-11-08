@@ -199,7 +199,6 @@ address { font-style: normal; }
 .nav { position: fixed; inset: 0 0 auto 0; z-index: 100; transition: background-color .5s, box-shadow .5s, transform .5s var(--ease); padding-top: env(safe-area-inset-top); }
 .nav__inner { height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .nav.is-scrolled { background: var(--nav-bg); backdrop-filter: saturate(160%) blur(16px); -webkit-backdrop-filter: saturate(160%) blur(16px); box-shadow: 0 1px 0 var(--line); }
-.nav.is-hidden { transform: translateY(-100%); }
 
 .brand { display: flex; align-items: center; gap: 10px; color: #fff; transition: color .4s; min-width: 0; }
 .brand img { width: 38px; height: auto; flex: none; filter: drop-shadow(0 0 10px rgba(212, 175, 55, .35)); }

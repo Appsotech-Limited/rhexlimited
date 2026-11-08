@@ -47,12 +47,10 @@
 
   /* ---------- Nav: scrolled state, hide on scroll down, progress ---------- */
   var nav = $('.nav');
-  var lastY = 0, ticking = false;
+  var ticking = false; // the bar stays fixed at the top at all times
   function onScroll() {
     var y = window.scrollY;
     nav.classList.toggle('is-scrolled', y > 40);
-    nav.classList.toggle('is-hidden', y > 400 && y > lastY && !nav.classList.contains('menu-open'));
-    lastY = y;
     var h = document.documentElement.scrollHeight - window.innerHeight;
     root.style.setProperty('--progress', h > 0 ? (y / h).toFixed(4) : 0);
     // subtle hero parallax
