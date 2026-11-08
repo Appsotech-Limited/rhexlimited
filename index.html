@@ -2,7 +2,7 @@
 <html lang="en" class="no-js">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>RHEX | Royal Home of Excellence Ltd.</title>
   <meta name="description" content="Royal Home of Excellence (RHEX) inspires individual and corporate excellence through creativity and innovation: consultancy in leadership, business, education, writing and publishing, the RHEX Sabificate School, events, real estate and general merchandise. Abuja, Nigeria.">
   <meta name="theme-color" content="#2F323E">
@@ -60,13 +60,10 @@
 
       <nav class="nav__links" aria-label="Primary">
         <a href="#about">About</a>
-        <a href="#vision">Vision</a>
         <a href="#team">Team</a>
         <a href="#services">Services</a>
-        <a href="#sabificate">Case Study</a>
         <a href="#projects">Projects</a>
-        <a href="/debate/">Debate Show</a>
-        <a href="#contact">Contact</a>
+        <a href="/debate/" class="nav__feature"><i aria-hidden="true"></i>Debate Show</a>
       </nav>
 
       <div class="nav__actions">
@@ -76,20 +73,42 @@
         </button>
         <a href="#contact" class="btn btn--small btn--primary nav__cta">Get in touch</a>
         <button class="nav__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-          <span></span><span></span><span></span>
+          <span class="nav__burger-label">Menu</span>
+          <span class="nav__burger-icon" aria-hidden="true"><span></span><span></span><span></span></span>
         </button>
       </div>
     </div>
 
     <div class="mobile-menu" id="mobile-menu" hidden>
-      <a href="#about">About</a>
-      <a href="#vision">Vision &amp; Mission</a>
-      <a href="#team">Our Team</a>
-      <a href="#services">Services</a>
-      <a href="#sabificate">Case Study</a>
-      <a href="#projects">Projects</a>
-      <a href="/debate/">Debate Show</a>
-      <a href="#contact">Contact</a>
+      <div class="mobile-menu__inner container">
+        <a href="/debate/" class="mobile-menu__feature">
+          <span class="mobile-menu__live">Voting is open</span>
+          <strong>The President</strong>
+          <span>RHEX Reality Debate Show. Find your contestant and vote.</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <div class="mobile-menu__groups">
+          <nav class="mobile-menu__group" aria-label="Who we are">
+            <p>Who we are</p>
+            <a href="#about"><span>01</span>About us</a>
+            <a href="#vision"><span>02</span>Vision &amp; mission</a>
+            <a href="#team"><span>03</span>Our team</a>
+          </nav>
+          <nav class="mobile-menu__group" aria-label="What we do">
+            <p>What we do</p>
+            <a href="#services"><span>04</span>Services</a>
+            <a href="#sabificate"><span>05</span>Sabificate case study</a>
+            <a href="#projects"><span>06</span>Projects</a>
+          </nav>
+        </div>
+        <div class="mobile-menu__contact">
+          <a href="#contact" class="btn btn--primary">Get in touch</a>
+          <div class="mobile-menu__quick">
+            <a href="tel:+2348107011517" class="mobile-menu__chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Call</a>
+            <a href="https://wa.me/2349097404887" target="_blank" rel="noopener" class="mobile-menu__chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/></svg>WhatsApp</a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -575,7 +594,7 @@
         </div>
       </div>
       <nav class="footer__nav" aria-label="Footer">
-        <a href="#about">About</a><a href="#services">Services</a><a href="#team">Team</a><a href="#projects">Projects</a><a href="/debate/">Debate Show</a><a href="#contact">Contact</a>
+        <a href="#about">About</a><a href="#vision">Vision</a><a href="#team">Team</a><a href="#services">Services</a><a href="#sabificate">Case Study</a><a href="#projects">Projects</a><a href="/debate/">Debate Show</a><a href="#contact">Contact</a>
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> Royal Home of Excellence Ltd. Registered with the Corporate Affairs Commission, Nigeria.</p>
     </div>

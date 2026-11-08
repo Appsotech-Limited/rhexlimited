@@ -101,7 +101,7 @@ main, header, footer { position: relative; z-index: 1; }
   .eyebrow::before, .eyebrow.both::after { width: 20px; }
   .hero .eyebrow::before, .hero .eyebrow::after { display: none; }
   .hero { min-height: calc(88svh - 68px); padding: 60px 0 100px; }
-  .hero-title { font-size: clamp(3.2rem, 17vw, 5rem); }
+  .hero-title { font-size: clamp(2.6rem, 14vw, 5rem); }
 }
 
 /* ---------- Type & buttons ---------- */
@@ -395,3 +395,137 @@ body.celebrating #sky { z-index: 60; }
 .finder .btn { padding: 14px 28px; }
 .finder-msg { min-height: 1.4em; margin: 0; color: var(--accent); font-size: .9rem; }
 .section-head { grid-template-columns: minmax(0, 1fr); }
+
+/* ==========================================================================
+   Responsive refinements. Most voters arrive from a WhatsApp link on a
+   phone, so phones come first here; tablets and large screens follow.
+   ========================================================================== */
+html { -webkit-tap-highlight-color: transparent; }
+.nav { padding-top: env(safe-area-inset-top); }
+.wrap { width: min(1180px, 100% - 32px - env(safe-area-inset-left) - env(safe-area-inset-right)); }
+footer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+
+/* Touch screens: no hover lifts that stick after a tap */
+@media (hover: none) {
+  .ccard:hover, .pillar:hover, .bundle:hover, .chip:hover, .btn-primary:hover, .btn-ghost:hover, .standings a:hover { transform: none; }
+  .ccard:hover .art img { transform: none; }
+  .ccard:active { transform: scale(.98); }
+}
+
+/* Nav: keep one clear "Vote" action visible on every phone */
+@media (max-width: 760px) {
+  .nav .wrap { height: 60px; }
+  .nav-links { gap: 10px; }
+  .nav-links a.keep {
+    display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px;
+    color: #1A1206; background: linear-gradient(120deg, var(--gold-soft), var(--orange)); letter-spacing: .12em; font-size: .7rem;
+  }
+  .theme-toggle { width: 38px; height: 38px; }
+}
+@media (max-width: 420px) {
+  .nav-links a.keep { display: inline-flex; }
+  .brand .wordmark small { display: none; }
+  .brand .wordmark { font-size: 1.3rem; }
+}
+
+/* Phones */
+@media (max-width: 599px) {
+  section.block { padding: 64px 0; }
+  .section-head { margin-bottom: 32px; }
+  .hero { min-height: calc(82svh - 60px); padding: 48px 0 84px; }
+  .hero-cta { display: grid; grid-template-columns: 1fr; width: 100%; max-width: 360px; margin-inline: auto; }
+  .hero-cta .btn { width: 100%; }
+  .pillars { margin-top: 36px; gap: 14px; }
+  .pillar { padding: 24px 22px; }
+  .pillar h3 { font-size: 1.6rem; }
+  .step { padding: 26px 0 18px; }
+  .step h3 { font-size: 1.55rem; }
+  blockquote.pull { padding-left: 18px; }
+
+  /* Two contestants per row so voters can scan the whole list quickly */
+  .cgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .ccard { border-radius: 16px; }
+  .ccard .tag { left: 10px; top: 10px; padding: 4px 9px; font-size: .58rem; letter-spacing: .14em; }
+  .ccard .votes-pill { left: 10px; right: auto; top: 38px; padding: 4px 9px; font-size: .58rem; }
+  .ccard .meta { left: 12px; right: 12px; bottom: 12px; }
+  .ccard .meta h3 { font-size: 1.15rem; line-height: 1.1; }
+  .ccard .meta span { font-size: .56rem; letter-spacing: .18em; margin-top: 4px; }
+  .monogram span { font-size: 3rem; }
+  .grid-tools { margin-bottom: 18px; }
+  .search { max-width: none; flex-basis: 100%; }
+  .empty { padding: 32px 18px; }
+
+  /* Contestant page: a smaller portrait gets the vote panel on screen sooner */
+  .cpage { padding: 22px 0 110px; }
+  .back { margin-bottom: 22px; }
+  .portrait { max-width: 300px; }
+  .portrait .badge { padding: 10px 14px; bottom: 16px; }
+  .portrait .badge b { font-size: 1.9rem; }
+  .cinfo h1 { font-size: clamp(2.4rem, 11vw, 3.2rem); margin: 12px 0 8px; }
+  .cinfo .show { font-size: .7rem; letter-spacing: .16em; }
+  .tally > div { flex: 1 1 0; padding: 10px 14px; }
+  .tally b { font-size: 1.7rem; }
+  .appeal { margin-top: 20px; font-size: .95rem; }
+  .vote-panel { margin-top: 28px; padding: 22px 16px; border-radius: 22px; }
+  .vote-panel h2 { font-size: 1.75rem; }
+  .bundle { padding: 12px 4px; }
+  .bundle b { font-size: 1.6rem; }
+  .total b { font-size: 2.2rem; }
+  .vote-btn { padding: 18px 12px; font-size: .78rem; letter-spacing: .12em; }
+  .share { gap: 8px; }
+  .share > span { flex-basis: 100%; }
+  .chip { height: 44px; padding: 0 14px; }
+
+  .thanks .card { padding: 34px 20px; border-radius: 22px; }
+  .thanks h2 { font-size: 2.3rem; }
+  .thanks .btn { width: 100%; }
+
+  .finder { padding: 6px; }
+  .finder input { padding: 0 12px; }
+  .finder .btn { padding: 14px 22px; }
+  .standings a { border-radius: 14px; }
+  .standings .who b { font-size: 1.15rem; }
+  .standings .n { font-size: 1.5rem; }
+  .foot { gap: 28px; }
+  footer { padding-top: 44px; }
+}
+
+/* Sticky "Vote" bar on phones, hidden once the vote panel is on screen */
+.vote-dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: none;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--bg) 82%, transparent); border-top: 1px solid var(--line);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  transform: translateY(110%); transition: transform .45s var(--ease);
+}
+.vote-dock.show { transform: none; }
+.vote-dock .btn { width: 100%; padding: 16px 12px; font-size: .78rem; letter-spacing: .12em; }
+@media (max-width: 900px) { .vote-dock { display: block; } }
+
+/* Tablets */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .cgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .ccard .meta h3 { font-size: 1.4rem; }
+  .pillars { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .pillar { padding: 26px 20px; }
+  .portrait { max-width: 380px; }
+  .vote-panel { max-width: 640px; margin-inline: auto; }
+}
+@media (min-width: 600px) and (max-width: 860px) {
+  .pillar h3 { font-size: 1.5rem; }
+}
+
+/* Large screens */
+@media (min-width: 1440px) {
+  .wrap { width: min(1320px, 100% - 96px); }
+  .cgrid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 26px; }
+}
+@media (min-width: 1920px) {
+  html { font-size: 17px; }
+  .wrap { width: min(1480px, 100% - 160px); }
+}
+@media (max-width: 760px) { .nav-links a.keep { white-space: nowrap; } }
+@media (max-width: 599px) { .tally small { letter-spacing: .14em; font-size: .58rem; } }
+/* The earlier phone rule for the hero title sits above the base rule, so restate it here */
+@media (max-width: 560px) { .hero-title { font-size: clamp(2.6rem, 15vw, 5rem); } }
+.vote-panel { scroll-margin-top: 80px; }

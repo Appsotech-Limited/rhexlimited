@@ -4,6 +4,8 @@
   var RHEX = (window.RHEX = window.RHEX || {});
   var root = document.documentElement;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Phones and touch tablets get a lighter sky: fewer stars and sparks, no glow halos, cheaper blending.
+  var lite = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
 
   /* ---------- Theme (same key as the main site) ---------- */
   function currentTheme() {
@@ -119,11 +121,13 @@
   function rand(a, b) { return a + Math.random() * (b - a); }
 
   function resize() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    // Phones fire resize whenever the address bar slides in or out; skip those small height-only changes.
+    if (W && Math.abs(window.innerWidth - W) < 2 && Math.abs(window.innerHeight - H) < 150) return;
+    DPR = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
     W = window.innerWidth; H = window.innerHeight;
     canvas.width = W * DPR; canvas.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    var target = Math.round(Math.min(160, (W * H) / 9000));
+    var target = Math.round(Math.min(lite ? 60 : 160, (W * H) / (lite ? 12000 : 9000)));
     while (dust.length < target) dust.push(makeDust(true));
     dust.length = target;
   }
@@ -139,8 +143,10 @@
   function burst(x, y, power) {
     if (!ctx) return;
     power = power || 1;
+    if (lite && sparks.length > 220) return; // keep phones smooth when bursts overlap
     var cs = colors();
-    var n = Math.round(rand(46, 70) * power);
+    var scale = lite ? 0.55 : 1;
+    var n = Math.round(rand(46, 70) * power * scale);
     var speed = rand(2.6, 4.2) * Math.sqrt(power);
     for (var i = 0; i < n; i++) {
       var a = (i / n) * Math.PI * 2 + rand(-0.05, 0.05);
@@ -148,7 +154,7 @@
       sparks.push({ x: x, y: y, px: x, py: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s,
         life: 1, decay: rand(0.008, 0.016), r: rand(1, 2.2), c: pick(cs), trail: true });
     }
-    for (var j = 0; j < 26 * power; j++) {
+    for (var j = 0; j < 26 * power * scale; j++) {
       var b = rand(0, Math.PI * 2), t = rand(0.2, 1.6);
       sparks.push({ x: x, y: y, px: x, py: y, vx: Math.cos(b) * t, vy: Math.sin(b) * t,
         life: 1, decay: rand(0.006, 0.012), r: rand(0.6, 1.4), c: pick(cs), glitter: true });
@@ -174,12 +180,15 @@
     });
   }
 
-  var last = 0, nextAmbient = 2500, nextShooter = 4000;
+  var last = 0, nextAmbient = 2500, nextShooter = 4000, looping = false;
+  function loop() { if (!looping) { looping = true; requestAnimationFrame(frame); } }
+  document.addEventListener("visibilitychange", function () { if (!document.hidden && ctx && !reduced) loop(); });
   function frame(t) {
+    if (document.hidden) { looping = false; return; }
     var dt = Math.min(50, t - last || 16); last = t;
     ctx.clearRect(0, 0, W, H);
     var dark = RHEX.isDark();
-    ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
+    ctx.globalCompositeOperation = dark && !lite ? "lighter" : "source-over";
 
     // stardust
     for (var i = 0; i < dust.length; i++) {
@@ -192,7 +201,7 @@
       ctx.globalAlpha = Math.max(0.05, alpha);
       ctx.fillStyle = d.c;
       ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.283); ctx.fill();
-      if (d.r > 1.5 && dark) {
+      if (d.r > 1.5 && dark && !lite) {
         ctx.globalAlpha *= 0.25; ctx.beginPath(); ctx.arc(d.x, d.y, d.r * 4, 0, 6.283); ctx.fill();
       }
     }
@@ -244,8 +253,8 @@
     // ambient events
     if (!document.hidden) {
       nextAmbient -= dt; nextShooter -= dt;
-      if (nextAmbient <= 0) { burst(rand(W * 0.1, W * 0.9), rand(H * 0.08, H * 0.45), rand(0.45, 0.85)); nextAmbient = rand(3200, 6500); }
-      if (nextShooter <= 0) { launchShooter(); nextShooter = rand(2500, 6000); }
+      if (nextAmbient <= 0) { burst(rand(W * 0.1, W * 0.9), rand(H * 0.08, H * 0.45), rand(0.45, 0.85)); nextAmbient = rand(3200, 6500) * (lite ? 1.6 : 1); }
+      if (nextShooter <= 0) { launchShooter(); nextShooter = rand(2500, 6000) * (lite ? 1.5 : 1); }
     }
     requestAnimationFrame(frame);
   }
@@ -269,7 +278,7 @@
       burst(e.clientX, e.clientY, 0.8);
     });
     setTimeout(function () { burst(W / 2, H * 0.34, 1.4); }, 700);
-    requestAnimationFrame(frame);
+    loop();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
