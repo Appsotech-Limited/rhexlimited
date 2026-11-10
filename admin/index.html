@@ -286,7 +286,8 @@
           <div class="card tool">
             <h3>Find missed payments</h3>
             <p class="muted">Compares every successful Paystack payment with the vote records and lists any that were never counted.</p>
-            <div class="inline"><select id="rc-days" aria-label="How far back"><option value="1">Last 24 hours</option><option value="3" selected>Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button class="btn btn-primary" type="button" id="rc-go">Scan Paystack</button></div>
+            <div class="inline"><select id="rc-days" aria-label="How far back"><option value="1">Last 24 hours</option><option value="3" selected>Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button class="btn btn-primary" type="button" id="rc-go">Scan Paystack</button><button class="btn" type="button" id="rc-sync">Sync with Paystack</button></div>
+            <p class="muted" style="margin-top:8px"><small>The site also syncs automatically every few minutes. "Sync with Paystack" counts every missed payment in the chosen period at once.</small></p>
             <div class="result" id="rc-out"></div>
           </div>
         </div>
@@ -860,6 +861,18 @@
           }).join("") + "</ul>" : "");
       }).catch(function (err) { $("rc-out").innerHTML = '<p class="err">' + esc(err.message) + "</p>"; });
     });
+    $("rc-sync").addEventListener("click", function () {
+      $("rc-out").innerHTML = '<p class="muted">Syncing with Paystack…</p>';
+      busy($("rc-sync"), api("sync", { method: "POST", body: { days: Number($("rc-days").value) } })).then(function (j) {
+        var a = j.added || [];
+        $("rc-out").innerHTML = '<p class="muted">Checked ' + nf(j.checked) + " debate payment(s) on Paystack" + (j.truncated ? " (the newest 2,000 only)" : "") + ". " +
+          (a.length ? "<b>Counted " + a.length + " missed payment(s), " + nf(j.votes) + " vote(s):</b>" : "Everything was already counted. ✓") + "</p>" +
+          (a.length ? '<ul class="list">' + a.map(function (x) {
+            return '<li><b>' + nf(x.votes) + " vote(s)</b> for No. " + esc(x.contestant) + " · " + naira(x.amountKobo) + '<small class="mono">' + esc(x.reference) + " · " + esc(x.email || "") + " · " + esc(when(x.paidAt)) + "</small></li>";
+          }).join("") + "</ul>" : "");
+        if (a.length) { toast("Votes synced"); loadContestants(); }
+      }).catch(function (err) { $("rc-out").innerHTML = '<p class="err">' + esc(err.message) + "</p>"; });
+    });
     $("rc-out").addEventListener("click", function (e) {
       var b = e.target.closest("[data-credit]"); if (!b) return;
       busy(b, api("credit", { method: "POST", body: { reference: b.dataset.credit } }))
@@ -901,7 +914,7 @@
     });
 
     /* ---------- activity log ---------- */
-    var LOG_LABELS = { login: "Signed in", login_failed: "Wrong password", contestant_add: "Added contestant", contestant_edit: "Edited contestant", contestant_hide: "Hid contestant", contestant_show: "Showed contestant", contestant_eliminate: "Evicted contestant", contestant_reinstate: "Reinstated contestant", contestant_delete: "Deleted contestant", payment_void: "Removed payment from count", payment_restore: "Counted payment again", payment_credit: "Credited missed payment", requery: "Checked payment with Paystack", reconcile: "Scanned Paystack for missed payments", vote_adjust: "Adjusted votes", settings: "Changed show settings", round_start: "Started round", export: "Downloaded" };
+    var LOG_LABELS = { login: "Signed in", login_failed: "Wrong password", contestant_add: "Added contestant", contestant_edit: "Edited contestant", contestant_hide: "Hid contestant", contestant_show: "Showed contestant", contestant_eliminate: "Evicted contestant", contestant_reinstate: "Reinstated contestant", contestant_delete: "Deleted contestant", payment_void: "Removed payment from count", payment_restore: "Counted payment again", payment_credit: "Credited missed payment", requery: "Checked payment with Paystack", reconcile: "Scanned Paystack for missed payments", paystack_sync: "Synced with Paystack", vote_adjust: "Adjusted votes", settings: "Changed show settings", round_start: "Started round", export: "Downloaded" };
     var loff = 0;
     function describe(d) {
       if (!d) return "";

@@ -76,7 +76,10 @@ export function rowFromTransaction(d, priceNaira) {
   if (typeof d.reference !== "string" || !d.reference.startsWith(REFERENCE_PREFIX)) return null;
   if ((d.currency || "NGN") !== "NGN") return null;
   const meta = metaOf(d);
-  const contestant = String(meta.contestant_number || "").trim();
+  // The reference is RHEX-PRES-<contestant>-<random>, so it still names the
+  // contestant if a payment arrives without its metadata.
+  const fromRef = (d.reference.slice(REFERENCE_PREFIX.length).match(/^([A-Za-z0-9]{1,20})-/) || [])[1] || "";
+  const contestant = String(meta.contestant_number || fromRef).trim();
   if (!NUMBER_RE.test(contestant)) return null;
   const amountKobo = Number(d.amount);
   const votes = Math.floor(amountKobo / (priceNaira * 100));

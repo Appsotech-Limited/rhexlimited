@@ -4,12 +4,21 @@
 // Admins hide the counts or switch the leaderboard to "this round only" at /admin/
 // (Show controls). DEBATE_TALLY_HIDDEN=true in Netlify also hides them.
 // Votes are always recorded; the pages just stop showing numbers.
+//
+// Each request may also start a Paystack sync in the background (at most once
+// every 5 minutes across the whole site), so a payment whose webhook never
+// arrived is still counted within minutes. See ../lib/paystack-sync.mjs.
 import { db, configured, getSettings } from "../lib/debate-db.mjs";
+import { syncIfDue } from "../lib/paystack-sync.mjs";
 
 export const config = { path: "/api/debate/tally" };
 
-export default async () => {
+export default async (req, context) => {
   const env = process.env;
+  // Background only: never slows down or breaks the tally itself.
+  if (configured(env) && context && typeof context.waitUntil === "function") {
+    context.waitUntil(syncIfDue(env).catch((e) => console.error("paystack sync:", e.message)));
+  }
   const headers = {
     "Content-Type": "application/json",
     // Short cache so a busy page doesn't hit the database on every view.
