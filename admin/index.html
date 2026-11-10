@@ -248,6 +248,7 @@
         <button role="tab" data-tab="contestants" aria-selected="false">Contestants</button>
         <button role="tab" data-tab="payments" aria-selected="false">Payments</button>
         <button role="tab" data-tab="voters" aria-selected="false">Voters</button>
+        <button role="tab" data-tab="sync" aria-selected="false">Paystack sync</button>
         <button role="tab" data-tab="show" aria-selected="false">Show controls</button>
         <button role="tab" data-tab="activity" aria-selected="false">Activity</button>
       </nav>
@@ -286,8 +287,7 @@
           <div class="card tool">
             <h3>Find missed payments</h3>
             <p class="muted">Compares every successful Paystack payment with the vote records and lists any that were never counted.</p>
-            <div class="inline"><select id="rc-days" aria-label="How far back"><option value="1">Last 24 hours</option><option value="3" selected>Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button class="btn btn-primary" type="button" id="rc-go">Scan Paystack</button><button class="btn" type="button" id="rc-sync">Sync with Paystack</button></div>
-            <p class="muted" style="margin-top:8px"><small>The site also syncs automatically every few minutes. "Sync with Paystack" counts every missed payment in the chosen period at once.</small></p>
+            <div class="inline"><select id="rc-days" aria-label="How far back"><option value="1">Last 24 hours</option><option value="3" selected>Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button class="btn btn-primary" type="button" id="rc-go">Scan Paystack</button><button class="btn" type="button" data-goto="sync">Compare &amp; sync…</button></div>
             <div class="result" id="rc-out"></div>
           </div>
         </div>
@@ -322,6 +322,17 @@
           <div class="pager"><button class="btn btn-sm" id="vprev" type="button">← Back</button><span class="muted" id="vrange"></span><button class="btn btn-sm" id="vnext" type="button">More →</button></div>
         </div>
         <p class="hint">One row per email address. Tap a voter to see their payments.</p>
+      </section>
+
+      <!-- Paystack sync -->
+      <section class="panel" id="tab-sync" hidden>
+        <div class="panel-head"><h2>Paystack <span class="gold">sync</span></h2></div>
+        <div class="card tool">
+          <p class="muted">Compares every successful vote payment on Paystack with the votes counted on the website. Nothing changes until you press Apply.</p>
+          <div class="inline"><select id="sy-days" aria-label="Period"><option value="1">Last 24 hours</option><option value="3">Last 3 days</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option></select><button class="btn btn-primary" type="button" id="sy-go">Compare</button></div>
+          <label class="check" id="sy-auto-wrap" hidden style="margin:12px 0 0"><input type="checkbox" id="sy-auto"> <span>Also sync automatically every 5 minutes, without review</span></label>
+        </div>
+        <div id="sy-out"></div>
       </section>
 
       <!-- Show controls -->
@@ -490,7 +501,7 @@
 
     /* ---------- tabs ---------- */
     var current = "overview";
-    var TABS = ["overview", "contestants", "payments", "voters", "show", "activity"];
+    var TABS = ["overview", "contestants", "payments", "voters", "sync", "show", "activity"];
     function go(tab) {
       current = tab;
       document.querySelectorAll("[data-tab]").forEach(function (x) { x.setAttribute("aria-selected", String(x.dataset.tab === tab)); });
@@ -498,6 +509,7 @@
       if (tab === "payments") loadPayments(0);
       else if (tab === "voters") loadVoters(0);
       else if (tab === "activity") loadLog(0);
+      else if (tab === "sync") loadSync();
       else if (tab === "show") { loadContestants(); loadAdjustments(); }
       else loadContestants();
       window.scrollTo(0, 0);
@@ -861,17 +873,58 @@
           }).join("") + "</ul>" : "");
       }).catch(function (err) { $("rc-out").innerHTML = '<p class="err">' + esc(err.message) + "</p>"; });
     });
-    $("rc-sync").addEventListener("click", function () {
-      $("rc-out").innerHTML = '<p class="muted">Syncing with Paystack…</p>';
-      busy($("rc-sync"), api("sync", { method: "POST", body: { days: Number($("rc-days").value) } })).then(function (j) {
-        var a = j.added || [];
-        $("rc-out").innerHTML = '<p class="muted">Checked ' + nf(j.checked) + " debate payment(s) on Paystack" + (j.truncated ? " (the newest 2,000 only)" : "") + ". " +
-          (a.length ? "<b>Counted " + a.length + " missed payment(s), " + nf(j.votes) + " vote(s):</b>" : "Everything was already counted. ✓") + "</p>" +
-          (a.length ? '<ul class="list">' + a.map(function (x) {
-            return '<li><b>' + nf(x.votes) + " vote(s)</b> for No. " + esc(x.contestant) + " · " + naira(x.amountKobo) + '<small class="mono">' + esc(x.reference) + " · " + esc(x.email || "") + " · " + esc(when(x.paidAt)) + "</small></li>";
-          }).join("") + "</ul>" : "");
-        if (a.length) { toast("Votes synced"); loadContestants(); }
-      }).catch(function (err) { $("rc-out").innerHTML = '<p class="err">' + esc(err.message) + "</p>"; });
+    /* ---------- Paystack sync (compare, then apply) ---------- */
+    var sy = null;
+    function diffCell(n) { return n === 0 ? '<span class="pill ok">Matches</span>' : '<b style="color:var(--orange-deep)">' + (n > 0 ? "+" : "") + nf(n) + "</b>"; }
+    function payRow(x, extra) {
+      return "<li><b>" + nf(x.votes) + " vote(s)</b> for " + esc(x.name || "") + " (No. " + esc(x.contestant) + ") · " + naira(x.amountKobo) + (extra || "") +
+        '<small class="mono">' + esc(x.reference) + (x.email ? " · " + esc(x.email) : "") + " · " + esc(when(x.paidAt)) + "</small></li>";
+    }
+    function loadSync() {
+      if (!hasPaystack) { $("sy-out").innerHTML = '<p class="err">PAYSTACK_SECRET_KEY isn\'t set in the hosting settings.</p>'; return; }
+      $("sy-out").innerHTML = '<div class="card tool"><p class="muted">Comparing with Paystack…</p></div>';
+      busy($("sy-go"), api("sync/preview?days=" + $("sy-days").value)).then(renderSync)
+        .catch(function (err) { $("sy-out").innerHTML = '<div class="card tool"><p class="err">' + esc(err.message) + "</p></div>"; });
+    }
+    function renderSync(j) {
+      sy = j;
+      $("sy-auto-wrap").hidden = !j.autoSyncAvailable;
+      $("sy-auto").checked = Boolean(j.autoSync);
+      var m = j.missing || [], ok = !m.length && !(j.mismatched || []).length && !(j.notOnPaystack || []).length;
+      var h = '<div class="stats">' +
+        '<div class="card stat"><small>Paystack votes</small><b>' + nf(j.paystack.votes) + "</b><small>" + nf(j.paystack.payments) + " payments</small></div>" +
+        '<div class="card stat"><small>Website votes</small><b>' + nf(j.website.votes) + "</b><small>" + nf(j.website.payments) + " payments</small></div>" +
+        '<div class="card stat"><small>Missing on website</small><b>' + nf(j.missingVotes) + "</b><small>" + nf(m.length) + " payments</small></div>" +
+        '<div class="card stat"><small>Since</small><b style="font-size:20px">' + esc(when(j.since)) + "</b>" + (j.truncated ? "<small>Newest 2,000 payments only</small>" : "") + "</div></div>";
+      h += '<div class="card banner">' + (ok ? "<span><b>✓ The website matches Paystack for this period.</b> Nothing to sync.</span>" :
+        m.length ? '<span><b>' + nf(m.length) + " Paystack payment(s), " + nf(j.missingVotes) + ' vote(s), are not counted on the website.</b></span><button class="btn btn-primary" type="button" id="sy-apply" style="margin-left:auto">Apply sync: add ' + nf(j.missingVotes) + " vote(s)</button>" :
+        "<span><b>No missing payments.</b> See the notes below.</span>") + "</div>";
+      h += '<div class="card" style="margin-top:16px"><table class="ptable"><thead><tr><th>Contestant</th><th class="r">Paystack</th><th class="r">Website</th><th class="r">Difference</th><th class="r">After sync</th></tr></thead><tbody>' +
+        (j.contestants.length ? j.contestants.map(function (c) {
+          return "<tr><td data-l=\"Contestant\"><b>" + esc(c.name || "Unknown") + '</b> <small class="muted">No. ' + esc(c.number) + "</small></td>" +
+            '<td class="r" data-l="Paystack">' + nf(c.paystack) + '</td><td class="r" data-l="Website">' + nf(c.website) + '</td><td class="r" data-l="Difference">' + diffCell(c.difference) + '</td><td class="r" data-l="After sync">' + nf(c.afterSync) + "</td></tr>";
+        }).join("") : '<tr><td colspan="5" class="empty">No vote payments in this period.</td></tr>') + "</tbody></table></div>";
+      if (m.length) h += '<div class="card" style="margin-top:16px"><h3 style="margin:16px 16px 4px">Will be added</h3><ul class="list">' + m.map(function (x) { return payRow(x); }).join("") + "</ul></div>";
+      if ((j.mismatched || []).length) h += '<div class="card" style="margin-top:16px"><h3 style="margin:16px 16px 4px">Recorded differently from Paystack</h3><p class="muted" style="margin:0 16px 8px">Not changed by sync. Check each one under Payments.</p><ul class="list">' + j.mismatched.map(function (x) { return payRow(x, " · website has " + nf(x.website.votes) + " for No. " + esc(x.website.contestant)); }).join("") + "</ul></div>";
+      if ((j.notOnPaystack || []).length) h += '<div class="card" style="margin-top:16px"><h3 style="margin:16px 16px 4px">On the website but not found on Paystack</h3><p class="muted" style="margin:0 16px 8px">Not changed by sync. Usually a payment made just before this period; check it under Payments → Check a payment.</p><ul class="list">' + j.notOnPaystack.map(function (x) { return payRow(x); }).join("") + "</ul></div>";
+      if ((j.removed || []).length) h += '<p class="hint">' + nf(j.removed.length) + " paid vote(s) in this period were removed from the count by an admin. Sync leaves them removed.</p>";
+      $("sy-out").innerHTML = h;
+    }
+    $("sy-go").addEventListener("click", loadSync);
+    $("sy-days").addEventListener("change", loadSync);
+    $("sy-out").addEventListener("click", function (e) {
+      var b = e.target.closest("#sy-apply"); if (!b || !sy) return;
+      if (!confirm("Add " + sy.missing.length + " Paystack payment(s), " + sy.missingVotes + " vote(s), to the website count?")) return;
+      busy(b, api("sync", { method: "POST", body: { days: sy.days, references: sy.missing.map(function (x) { return x.reference; }) } })).then(function (j) {
+        toast("Added " + (j.added || []).length + " payment(s), " + nf(j.votes) + " vote(s)");
+        loadContestants(); loadSync();
+      }).catch(function (err) { toast(err.message); });
+    });
+    $("sy-auto").addEventListener("change", function () {
+      var on = $("sy-auto").checked;
+      api("settings", { method: "PUT", body: { paystack_auto_sync: on } })
+        .then(function () { toast(on ? "Automatic sync on" : "Automatic sync off"); })
+        .catch(function (err) { $("sy-auto").checked = !on; toast(err.message); });
     });
     $("rc-out").addEventListener("click", function (e) {
       var b = e.target.closest("[data-credit]"); if (!b) return;
