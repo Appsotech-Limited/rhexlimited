@@ -18,7 +18,8 @@
 //   POST   /api/admin/requery                   { reference } → live Paystack status vs our record
 //   POST   /api/admin/credit                    { reference } → re-verifies with Paystack, records missed votes
 //   GET    /api/admin/reconcile?days=           Paystack payments from the last N days that we never recorded
-//   POST   /api/admin/sync                      { days } → records every missed Paystack payment (idempotent)
+//   GET    /api/admin/sync/preview?days=        Paystack vs website per contestant, changes nothing
+//   POST   /api/admin/sync                      { days, references? } → records the missed Paystack payments (idempotent)
 //   GET    /api/admin/voters?q=&limit=&offset=  one row per voter email
 //   GET    /api/admin/adjustments               manual vote adjustments
 //   POST   /api/admin/adjustments               { contestant, votes (+/-), reason }
@@ -40,7 +41,7 @@ import {
   db, configured, NUMBER_RE, PHOTO_BUCKET, byNumber, paystack, rowFromTransaction, addFlags,
   getSettings, metaOf, REFERENCE_PREFIX,
 } from "../lib/debate-db.mjs";
-import { paystackDebateRows, missingRows, syncPaystack } from "../lib/paystack-sync.mjs";
+import { paystackDebateRows, missingRows, syncPaystack, syncPreview } from "../lib/paystack-sync.mjs";
 
 export const config = { path: ["/api/admin/*"] };
 
@@ -434,12 +435,20 @@ export default async (req, context) => {
       await log("reconcile", null, { days, checked: rows.length, missing: missing.length });
       return json({ days, checked: rows.length, paystackTotal: checked, missing, truncated });
     }
+    // Paystack vs website for a period, per contestant, without changing anything.
+    if (route === "sync/preview" && method === "GET") {
+      if (!env.PAYSTACK_SECRET_KEY) return fail(503, "PAYSTACK_SECRET_KEY isn't set in the hosting settings, so Paystack can't be checked.");
+      const days = Math.min(30, Math.max(1, Number(url.searchParams.get("days")) || 3));
+      const [preview, settings] = await Promise.all([syncPreview(env, { days }), getSettings(env)]);
+      return json({ ...preview, autoSync: Boolean(settings.paystack_auto_sync), autoSyncAvailable: "paystack_auto_sync" in settings, lastAutoSync: settings.last_paystack_sync || null });
+    }
     // Records every successful Paystack payment that isn't counted yet, in one go.
     if (route === "sync" && method === "POST") {
       if (!env.PAYSTACK_SECRET_KEY) return fail(503, "PAYSTACK_SECRET_KEY isn't set in the hosting settings, so Paystack can't be checked.");
       const body = await req.json().catch(() => ({}));
       const days = Math.min(30, Math.max(1, Number(body.days) || 3));
-      const r = await syncPaystack(env, { days });
+      const references = Array.isArray(body.references) ? body.references.map(String).filter((x) => REF_RE.test(x)).slice(0, 5000) : null;
+      const r = await syncPaystack(env, { days, references });
       await log("paystack_sync", null, { days, checked: r.debate, added: r.added.length, votes: r.votes, references: r.added.map((a) => a.reference) });
       return json({ days, checked: r.debate, added: r.added, votes: r.votes, truncated: r.truncated });
     }
@@ -480,6 +489,7 @@ export default async (req, context) => {
       const patch = {};
       if (body.voting_open !== undefined) patch.voting_open = Boolean(body.voting_open);
       if (body.tally_hidden !== undefined) patch.tally_hidden = Boolean(body.tally_hidden);
+      if (body.paystack_auto_sync !== undefined) patch.paystack_auto_sync = Boolean(body.paystack_auto_sync);
       if (body.closed_message !== undefined) patch.closed_message = cleanText(body.closed_message, 300);
       if (body.leaderboard_scope !== undefined) {
         if (!["total", "round"].includes(body.leaderboard_scope)) return fail(400, "Leaderboard must show all-time or this-round votes.");

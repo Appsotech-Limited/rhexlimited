@@ -5,9 +5,9 @@
 // (Show controls). DEBATE_TALLY_HIDDEN=true in Netlify also hides them.
 // Votes are always recorded; the pages just stop showing numbers.
 //
-// Each request may also start a Paystack sync in the background (at most once
-// every 5 minutes across the whole site), so a payment whose webhook never
-// arrived is still counted within minutes. See ../lib/paystack-sync.mjs.
+// If an admin has switched on automatic Paystack sync, each request may also start
+// one in the background (at most once every 5 minutes across the whole site), so
+// a payment whose webhook never arrived is still counted within minutes. See ../lib/paystack-sync.mjs.
 import { db, configured, getSettings } from "../lib/debate-db.mjs";
 import { syncIfDue } from "../lib/paystack-sync.mjs";
 
