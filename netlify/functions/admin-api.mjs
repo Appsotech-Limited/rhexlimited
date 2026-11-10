@@ -18,6 +18,7 @@
 //   POST   /api/admin/requery                   { reference } → live Paystack status vs our record
 //   POST   /api/admin/credit                    { reference } → re-verifies with Paystack, records missed votes
 //   GET    /api/admin/reconcile?days=           Paystack payments from the last N days that we never recorded
+//   POST   /api/admin/sync                      { days } → records every missed Paystack payment (idempotent)
 //   GET    /api/admin/voters?q=&limit=&offset=  one row per voter email
 //   GET    /api/admin/adjustments               manual vote adjustments
 //   POST   /api/admin/adjustments               { contestant, votes (+/-), reason }
@@ -39,6 +40,7 @@ import {
   db, configured, NUMBER_RE, PHOTO_BUCKET, byNumber, paystack, rowFromTransaction, addFlags,
   getSettings, metaOf, REFERENCE_PREFIX,
 } from "../lib/debate-db.mjs";
+import { paystackDebateRows, missingRows, syncPaystack } from "../lib/paystack-sync.mjs";
 
 export const config = { path: ["/api/admin/*"] };
 
@@ -424,30 +426,22 @@ export default async (req, context) => {
     if (route === "reconcile" && method === "GET") {
       if (!env.PAYSTACK_SECRET_KEY) return fail(503, "PAYSTACK_SECRET_KEY isn't set in the hosting settings, so Paystack can't be checked.");
       const days = Math.min(30, Math.max(1, Number(url.searchParams.get("days")) || 3));
-      const from = new Date(Date.now() - days * 86400000).toISOString();
-      const txs = [];
-      let truncated = false;
-      for (let page = 1; page <= 20; page++) {
-        const r = await paystack(`transaction?status=success&perPage=100&page=${page}&from=${encodeURIComponent(from)}`, env);
-        if (!r.ok) throw userError(`Paystack said: ${(r.body && r.body.message) || r.status}`, 502);
-        txs.push(...(r.body.data || []));
-        const pages = (r.body.meta && Number(r.body.meta.pageCount)) || 1;
-        if (page >= pages) break;
-        if (page === 20) truncated = true;
-      }
-      const debate = txs.map((t) => ({ t, row: rowFromTransaction(t, price(env)) })).filter((x) => x.row);
-      const seen = new Set();
-      for (let i = 0; i < debate.length; i += 80) {
-        const refs = debate.slice(i, i + 80).map((x) => `"${x.row.reference.replace(/"/g, "")}"`).join(",");
-        const { data } = await db(`debate_votes?select=reference&reference=in.(${encodeURIComponent(refs)})`);
-        data.forEach((d) => seen.add(d.reference));
-      }
-      const missing = debate.filter((x) => !seen.has(x.row.reference)).map((x) => ({
-        reference: x.row.reference, contestant: x.row.contestant_number, votes: x.row.votes,
-        amountKobo: x.row.amount_kobo, email: x.row.email, paidAt: x.row.paid_at,
+      const { rows, checked, truncated } = await paystackDebateRows(env, days);
+      const missing = (await missingRows(rows, env)).map((r) => ({
+        reference: r.reference, contestant: r.contestant_number, votes: r.votes,
+        amountKobo: r.amount_kobo, email: r.email, paidAt: r.paid_at,
       }));
-      await log("reconcile", null, { days, checked: debate.length, missing: missing.length });
-      return json({ days, checked: debate.length, paystackTotal: txs.length, missing, truncated });
+      await log("reconcile", null, { days, checked: rows.length, missing: missing.length });
+      return json({ days, checked: rows.length, paystackTotal: checked, missing, truncated });
+    }
+    // Records every successful Paystack payment that isn't counted yet, in one go.
+    if (route === "sync" && method === "POST") {
+      if (!env.PAYSTACK_SECRET_KEY) return fail(503, "PAYSTACK_SECRET_KEY isn't set in the hosting settings, so Paystack can't be checked.");
+      const body = await req.json().catch(() => ({}));
+      const days = Math.min(30, Math.max(1, Number(body.days) || 3));
+      const r = await syncPaystack(env, { days });
+      await log("paystack_sync", null, { days, checked: r.debate, added: r.added.length, votes: r.votes, references: r.added.map((a) => a.reference) });
+      return json({ days, checked: r.debate, added: r.added, votes: r.votes, truncated: r.truncated });
     }
 
     /* ----- voters ----- */
