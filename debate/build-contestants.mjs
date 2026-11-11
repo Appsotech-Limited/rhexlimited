@@ -167,6 +167,7 @@ const stamped = ["data/contestants.js", "assets/debate.js", "assets/debate.css",
 const hashes = Object.fromEntries(stamped.map((f) => [f,
   crypto.createHash("sha1").update(fs.readFileSync(path.join(here, f))).digest("hex").slice(0, 10)]));
 const pages = [path.join(here, "index.html"), path.join(outRoot, "index.html"),
+  path.join(here, "leaderboard", "index.html"), path.join(here, "gallery", "index.html"),
   ...[...seen].map((d) => path.join(outRoot, d, "index.html")),
   ...[...seen].map((d) => path.join(voteRoot, d, "index.html")),
   path.join(voteRoot, "_any", "index.html")];
@@ -182,7 +183,7 @@ for (const page of pages) {
 
 // sitemap.xml at the site root, listing the main pages and every contestant page.
 const today = new Date().toISOString().slice(0, 10);
-const urls = ["/", "/debate/", "/debate/contestant/", ...contestants.map((c) => `/debate/contestant/${String(c.number).trim()}/`)];
+const urls = ["/", "/debate/", "/debate/contestant/", "/debate/leaderboard/", "/debate/gallery/", ...contestants.map((c) => `/debate/contestant/${String(c.number).trim()}/`)];
 fs.writeFileSync(path.join(here, "..", "sitemap.xml"),
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls.map((u) => `  <url><loc>${esc(SITE + u)}</loc><lastmod>${today}</lastmod></url>`).join("\n") +
