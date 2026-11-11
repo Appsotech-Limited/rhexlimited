@@ -48,6 +48,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/debate.css?v=5035538384">
+  <link rel="stylesheet" href="assets/event.css?v=596aca91d7">
 </head>
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
@@ -60,7 +61,8 @@
         <span class="wordmark">RHEX<small>Royal Home of Excellence</small></span>
       </a>
       <nav class="nav-links" aria-label="Debate show">
-        <a href="./#show">The Show</a>
+        <a href="./#finale">Finale</a>
+        <a href="./#gallery">Gallery</a>
         <a href="./#how">How to Vote</a>
         <a href="./#contestants" class="keep">Contestants</a>
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch light or dark mode">
@@ -74,6 +76,7 @@
   <main>
     <section class="hero">
       <div class="wrap">
+        <a class="finale-ribbon reveal" href="./#finale"><b>Grand Finale</b><span>Fri 13 Nov · 9am · Hybrid Preparatory School</span><span class="arr" aria-hidden="true">→</span></a>
         <span class="eyebrow both reveal">RHEX Reality Debate Show</span>
         <h1 class="hero-title reveal d1"><span class="the">The</span><span class="gold-text">President</span></h1>
         <p class="lede reveal d2">Wit, ideas and leadership on one stage. Contestants make their case to the nation. Your vote decides who rises.</p>
@@ -84,6 +87,34 @@
         <div class="podium-line reveal d3" aria-hidden="true"></div>
       </div>
       <span class="scroll-cue" aria-hidden="true"></span>
+    </section>
+
+    <section class="finale" id="finale" aria-labelledby="finale-title">
+      <div class="wrap">
+        <div class="finale-card reveal">
+          <div class="bg" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-02.webp"><img src="assets/gallery/debate-02.jpg" alt="" width="1280" height="853" loading="lazy" decoding="async"></picture></div>
+          <div class="finale-body">
+            <span class="eyebrow">The Grand Finale</span>
+            <h2 id="finale-title">Friday 13th <span class="gold-text">November 2026</span></h2>
+            <ul class="finale-facts">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>9am to 12 noon</b></span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span><b>Hybrid Preparatory School</b>, Auta Balefi, by the roadside on your way to Keffi</span></li>
+            </ul>
+            <div class="countdown" id="countdown" role="timer" aria-label="Time until the Grand Finale">
+              <div><b data-d>0</b><small>Days</small></div>
+              <div><b data-h>00</b><small>Hours</small></div>
+              <div><b data-m>00</b><small>Mins</small></div>
+              <div><b data-s>00</b><small>Secs</small></div>
+            </div>
+            <p class="finale-status" id="finale-status" hidden></p>
+            <div class="finale-cta">
+              <a class="btn btn-primary" href="grand-finale.ics" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg> Add to calendar</a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Hybrid%20Preparatory%20School%2C%20Auta%20Balefi%2C%20Keffi" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg> Get directions</a>
+            </div>
+            <p class="finale-news">An event worthy of the news. Come and see who becomes The President.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="block" id="show">
@@ -103,6 +134,64 @@
           <article class="pillar reveal"><div class="num">I</div><h3>Ideas</h3><p>Contestants bring bold, practical visions and defend them under pressure.</p></article>
           <article class="pillar reveal d1"><div class="num">II</div><h3>Wit</h3><p>Quick thinking, sharp rebuttals and the charisma to hold a room.</p></article>
           <article class="pillar reveal d2"><div class="num">III</div><h3>Leadership</h3><p>The public chooses the voice it trusts to lead. That voice becomes The President.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="gallery" aria-labelledby="gallery-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow reveal">From the Stage</span>
+          <h2 class="reveal d1" id="gallery-title">Moments from <span class="gold-text">the debate</span></h2>
+          <p class="lede reveal d2">Bold ideas, sharp rebuttals and a room full of supporters. A look back at the show so far.</p>
+        </div>
+        <div class="reel reveal" id="reel" aria-roledescription="carousel" aria-label="Debate photos">
+          <div class="slide on" data-full="assets/gallery/debate-01.jpg" data-cap="The judges weigh every word">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-01-sm.webp 640w, assets/gallery/debate-01.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-01.jpg" srcset="assets/gallery/debate-01-sm.jpg 640w, assets/gallery/debate-01.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="The judges weigh every word" width="1280" height="853" fetchpriority="high" decoding="async"></picture>
+          </div>
+          <div class="slide" data-full="assets/gallery/debate-02.jpg" data-cap="Contestants take the stage">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-02-sm.webp 640w, assets/gallery/debate-02.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-02.jpg" srcset="assets/gallery/debate-02-sm.jpg 640w, assets/gallery/debate-02.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="Contestants take the stage" width="1280" height="853" loading="lazy" decoding="async"></picture>
+          </div>
+          <div class="slide" data-full="assets/gallery/debate-03.jpg" data-cap="A full house of supporters">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-03-sm.webp 640w, assets/gallery/debate-03.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-03.jpg" srcset="assets/gallery/debate-03-sm.jpg 640w, assets/gallery/debate-03.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="A full house of supporters" width="1280" height="853" loading="lazy" decoding="async"></picture>
+          </div>
+          <div class="slide" data-full="assets/gallery/debate-04.jpg" data-cap="Handshakes after the debate">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-04-sm.webp 640w, assets/gallery/debate-04.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-04.jpg" srcset="assets/gallery/debate-04-sm.jpg 640w, assets/gallery/debate-04.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="Handshakes after the debate" width="1280" height="853" loading="lazy" decoding="async"></picture>
+          </div>
+          <div class="slide" data-full="assets/gallery/debate-05.jpg" data-cap="Rivals on stage, friends after">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-05-sm.webp 640w, assets/gallery/debate-05.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-05.jpg" srcset="assets/gallery/debate-05-sm.jpg 640w, assets/gallery/debate-05.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="Rivals on stage, friends after" width="1280" height="853" loading="lazy" decoding="async"></picture>
+          </div>
+          <div class="slide" data-full="assets/gallery/debate-06.jpg" data-cap="Between rounds">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-06-sm.webp 640w, assets/gallery/debate-06.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-06.jpg" srcset="assets/gallery/debate-06-sm.jpg 640w, assets/gallery/debate-06.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="Between rounds" width="1280" height="853" loading="lazy" decoding="async"></picture>
+          </div>
+          <div class="slide" data-full="assets/gallery/debate-07.jpg" data-cap="Where it all happened">
+            <picture><source type="image/webp" srcset="assets/gallery/debate-07-sm.webp 640w, assets/gallery/debate-07.webp 1280w" sizes="(max-width: 1180px) 100vw, 1180px"><img src="assets/gallery/debate-07.jpg" srcset="assets/gallery/debate-07-sm.jpg 640w, assets/gallery/debate-07.jpg 1280w" sizes="(max-width: 1180px) 100vw, 1180px" alt="Where it all happened" width="1280" height="853" loading="lazy" decoding="async"></picture>
+          </div>
+          <div class="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="cap" aria-live="polite"><small></small><span></span></div>
+          <div class="ctrl">
+            <button type="button" data-prev aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button type="button" data-play aria-label="Pause slideshow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+            <button type="button" data-next aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="strip reveal d1">
+          <div class="strip-track">
+            <button type="button" data-photo="0" aria-label="Open photo: The judges weigh every word"><picture><source type="image/webp" srcset="assets/gallery/debate-01-sm.webp"><img src="assets/gallery/debate-01-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="1" aria-label="Open photo: Contestants take the stage"><picture><source type="image/webp" srcset="assets/gallery/debate-02-sm.webp"><img src="assets/gallery/debate-02-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="2" aria-label="Open photo: A full house of supporters"><picture><source type="image/webp" srcset="assets/gallery/debate-03-sm.webp"><img src="assets/gallery/debate-03-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="3" aria-label="Open photo: Handshakes after the debate"><picture><source type="image/webp" srcset="assets/gallery/debate-04-sm.webp"><img src="assets/gallery/debate-04-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="4" aria-label="Open photo: Rivals on stage, friends after"><picture><source type="image/webp" srcset="assets/gallery/debate-05-sm.webp"><img src="assets/gallery/debate-05-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="5" aria-label="Open photo: Between rounds"><picture><source type="image/webp" srcset="assets/gallery/debate-06-sm.webp"><img src="assets/gallery/debate-06-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="6" aria-label="Open photo: Where it all happened"><picture><source type="image/webp" srcset="assets/gallery/debate-07-sm.webp"><img src="assets/gallery/debate-07-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="0" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-01-sm.webp"><img src="assets/gallery/debate-01-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="1" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-02-sm.webp"><img src="assets/gallery/debate-02-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="2" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-03-sm.webp"><img src="assets/gallery/debate-03-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="3" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-04-sm.webp"><img src="assets/gallery/debate-04-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="4" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-05-sm.webp"><img src="assets/gallery/debate-05-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="5" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-06-sm.webp"><img src="assets/gallery/debate-06-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+            <button type="button" data-photo="6" tabindex="-1" aria-hidden="true"><picture><source type="image/webp" srcset="assets/gallery/debate-07-sm.webp"><img src="assets/gallery/debate-07-sm.jpg" alt="" width="640" height="427" loading="lazy" decoding="async"></picture></button>
+          </div>
         </div>
       </div>
     </section>
@@ -179,8 +268,16 @@
     </div>
   </footer>
 
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+    <figure><img alt=""><figcaption></figcaption></figure>
+    <button type="button" class="x" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button type="button" class="prev" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button type="button" class="next" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+
   <script src="data/contestants.js?v=aa0b9a5918"></script>
   <script src="assets/debate.js?v=d753969329"></script>
+  <script src="assets/event.js?v=d67419d4b0"></script>
   <script>
     window.RHEX.ready(function () {
       var R = window.RHEX, cfg = R.data.config || {}, list = (R.data.contestants || []).slice();
