@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Royal Home of Excellence//RHEX Debate Show//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:rhex-debate-grand-finale-2026@rhexlimited.com
+DTSTAMP:20261111T080000Z
+DTSTART:20261113T080000Z
+DTEND:20261113T110000Z
+SUMMARY:RHEX Reality Debate Show: The President - Grand Finale
+LOCATION:Hybrid Preparatory School\, Auta Balefi\, by the roadside on your way to Keffi
+DESCRIPTION:Grand Finale of the RHEX Reality Debate Show (The President)\, organised by Royal Home of Excellence. 9am to 12 noon. https://rhexlimited.com/debate/
+URL:https://rhexlimited.com/debate/
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:RHEX Grand Finale starts at 9am
+END:VALARM
+END:VEVENT
+END:VCALENDAR

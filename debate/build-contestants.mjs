@@ -163,7 +163,7 @@ if (fs.existsSync(outRoot)) {
 // Cache-busting: the CDN lets browsers keep .js/.css for hours, so stamp each
 // shared file's URL with a hash of its content. Changing contestants.js then
 // reaches visitors on their next page load.
-const stamped = ["data/contestants.js", "assets/debate.js", "assets/debate.css"];
+const stamped = ["data/contestants.js", "assets/debate.js", "assets/debate.css", "assets/event.js", "assets/event.css"];
 const hashes = Object.fromEntries(stamped.map((f) => [f,
   crypto.createHash("sha1").update(fs.readFileSync(path.join(here, f))).digest("hex").slice(0, 10)]));
 const pages = [path.join(here, "index.html"), path.join(outRoot, "index.html"),
