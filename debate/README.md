@@ -57,3 +57,7 @@ Follow **Deploy (Cloudflare Pages)** in the root `README.md`. These variables ar
 4. The pages read totals from `/api/debate/tally`, which is cached for 15 seconds, and refresh them every 30 seconds. Live standings appear on `/debate/`, and each contestant page shows its count and position.
 
 Every payment is also visible in the Paystack dashboard. For a full audit, export the `debate_votes` table from Supabase.
+
+## Automatic Paystack sync
+
+Every 5 minutes, a Supabase `pg_cron` job (`supabase/debate_sync_schedule.sql`) calls `/api/debate/sync`. That endpoint lists the last two days of successful Paystack payments and records any the website is missing. Payments are matched by their Paystack reference, so none is ever counted twice. It runs only while **Admin → Paystack sync → Also sync automatically** is on, and each sync that adds votes appears in the Activity log. Cloudflare Pages has no scheduler of its own, which is why the schedule lives in Supabase.
