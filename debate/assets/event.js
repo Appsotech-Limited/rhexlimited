@@ -13,7 +13,7 @@
     if (now >= END) {
       if (cd) cd.hidden = true;
       if (status) { status.hidden = false; status.textContent = "The Grand Finale has taken place. Thank you to everyone who came and voted."; }
-      if (ribbon) ribbon.hidden = true;
+      // After the finale the ribbon points to the winners podium (set in the HTML).
       return false;
     }
     if (now >= START) {
